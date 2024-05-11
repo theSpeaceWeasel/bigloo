@@ -17,7 +17,7 @@ export class BoardAPI {
       BoardList = [...apiData];
       updateLocalStorageBoards(BoardList);
     }
-
+    
     return BoardList;
     //TODO:integrate API module when got API from backend team :)
     /*
