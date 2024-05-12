@@ -18,7 +18,7 @@ const Navbar = () => {
             <Link to={"/"}>Home</Link>
             <Link to="/tickets">Tickets</Link>
             <div className="icon" onClick={() => navigate('/add-ticket')}>➕</div>
-            <div className="icon" style={{ fontSize: "40px" }} onClick={() => navigate('/tickets')}>←</div>
+            <div className="icon" style={{ fontSize: "40px" }} onClick={() => navigate(-1)}>←</div>
             <button className="logout" onClick={() => logout()}>Logout</button>
 
           </>
