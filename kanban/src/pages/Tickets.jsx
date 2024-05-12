@@ -66,12 +66,7 @@ const Tickets = () => {
     ...new Set(tickets.data?.map(({ category }) => category).sort())
   ]
   console.log(uniqueCategories)
-  return isFetching ? (<Lottie
-    options={defaultOptions}
-    style={{ marginTop: "10rem" }}
-    height={400}
-    width={400}
-  />) : (
+  return (
 
     <div className="dashboard">
 
@@ -89,31 +84,38 @@ const Tickets = () => {
       </div>
 
       <h1>Your Tickets</h1>
-      <motion.div
-        variants={gridVariants}
-        initial="hidden"
-        animate="show"
-        className="ticket-container">
-        {tickets.data && uniqueCategories?.map((uniqueCategory, categoryIndex) => (
-          <motion.div
-            variants={elementVariants}
-            // transition={{ staggerChildren: 0.1 }}
-            key={categoryIndex}>
-            <h3>{uniqueCategory}</h3>
+      {isFetching ? (<Lottie
+        options={defaultOptions}
+        style={{ marginTop: "10rem" }}
+        height={400}
+        width={400}
+      />) :
+        <motion.div
+          variants={gridVariants}
+          initial="hidden"
+          animate="show"
+          className="ticket-container">
+          {tickets.data && uniqueCategories?.map((uniqueCategory, categoryIndex) => (
+            <motion.div
+              variants={elementVariants}
+              // transition={{ staggerChildren: 0.1 }}
+              key={categoryIndex}>
+              <h3>{uniqueCategory}</h3>
 
-            {tickets.data.filter(ticket => ticket.category === uniqueCategory).map((filteredTicket, i) => (
-              <TicketCard
-                key={i}
-                id={i}
-                color={filteredTicket.color}
-                ticket={filteredTicket}
-                refetch={refetchTickets}
-              />
-            ))}
+              {tickets.data.filter(ticket => ticket.category === uniqueCategory).map((filteredTicket, i) => (
+                <TicketCard
+                  key={i}
+                  id={i}
+                  color={filteredTicket.color}
+                  ticket={filteredTicket}
+                  refetch={refetchTickets}
+                />
+              ))}
 
-          </motion.div>
-        ))}
-      </motion.div>
+            </motion.div>
+          ))}
+        </motion.div>
+      }
     </div >
 
   )
