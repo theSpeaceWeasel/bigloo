@@ -3,6 +3,8 @@ import { useGetTicketsQuery } from '../services/ticket';
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from 'react-router-dom';
 import { motion } from "framer-motion"
+import Lottie from "react-lottie";
+import loadinganimation from "./laptop-animation.json";
 
 
 const Tickets = () => {
@@ -23,6 +25,14 @@ const Tickets = () => {
     }
   };
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadinganimation,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   const gridVariants = {
     hidden: { opacity: 0 },
@@ -36,7 +46,7 @@ const Tickets = () => {
     data: tickets = [],
     refetch: refetchTickets,
     // isLoading,
-    // isFetching,
+    isFetching,
     // isError,
     // error,
   } = useGetTicketsQuery({ userId: user.id, search: ticketSearch ?? null, sorting: filter ?? null }, {
@@ -56,7 +66,12 @@ const Tickets = () => {
     ...new Set(tickets.data?.map(({ category }) => category).sort())
   ]
   console.log(uniqueCategories)
-  return (
+  return isFetching ? (<Lottie
+    options={defaultOptions}
+    style={{ marginTop: "10rem" }}
+    height={400}
+    width={400}
+  />) : (
 
     <div className="dashboard">
 
@@ -100,6 +115,7 @@ const Tickets = () => {
         ))}
       </motion.div>
     </div >
+
   )
 }
 
