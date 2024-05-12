@@ -23,6 +23,7 @@
     "antd": "^5.14.2",
     "axios": "^1.6.7",
     "feather-icons": "^4.29.1",
+    "framer-motion": "^11.1.9",
     "moment": "^2.30.1",
     "mui-datatables": "^4.3.0",
     "react": "^18.2.0",

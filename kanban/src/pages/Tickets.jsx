@@ -2,7 +2,7 @@ import TicketCard from "../components/TicketCard"
 import { useGetTicketsQuery } from '../services/ticket';
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from 'react-router-dom';
-
+import { motion } from "framer-motion"
 
 
 const Tickets = () => {
@@ -24,7 +24,11 @@ const Tickets = () => {
   };
 
 
-
+  const gridVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.25 } }
+  }
+  const elementVariants = { hidden: { opacity: 0 }, show: { opacity: 1 } }
 
 
   console.log(user);
@@ -70,10 +74,18 @@ const Tickets = () => {
       </div>
 
       <h1>Your Tickets</h1>
-      <div className="ticket-container">
+      <motion.div
+        variants={gridVariants}
+        initial="hidden"
+        animate="show"
+        className="ticket-container">
         {tickets.data && uniqueCategories?.map((uniqueCategory, categoryIndex) => (
-          <div key={categoryIndex}>
+          <motion.div
+            variants={elementVariants}
+            // transition={{ staggerChildren: 0.1 }}
+            key={categoryIndex}>
             <h3>{uniqueCategory}</h3>
+
             {tickets.data.filter(ticket => ticket.category === uniqueCategory).map((filteredTicket, i) => (
               <TicketCard
                 key={i}
@@ -83,10 +95,11 @@ const Tickets = () => {
                 refetch={refetchTickets}
               />
             ))}
-          </div>
+
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </div >
   )
 }
 

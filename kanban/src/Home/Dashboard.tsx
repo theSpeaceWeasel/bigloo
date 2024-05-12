@@ -13,6 +13,7 @@ import {
 import { useCreateCardMutation, useDeleteCardMutation } from "../services/card";
 import Lottie from "react-lottie";
 import loadinganimation from "./loading.json";
+import { motion } from "framer-motion";
 
 function Dashboard() {
   const { ticketId } = useParams();
@@ -214,6 +215,12 @@ function Dashboard() {
     });
   };
 
+  const gridVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.25 } },
+  };
+  const elementVariants = { hidden: { opacity: 0 }, show: { opacity: 1 } };
+
   return isFetching ? (
     <Lottie
       options={defaultOptions}
@@ -222,12 +229,17 @@ function Dashboard() {
       width={400}
     />
   ) : (
-    <div className="app-dsh">
+    <motion.div
+      variants={gridVariants}
+      initial="hidden"
+      animate="show"
+      className="app-dsh"
+    >
       <div className="app-nav">
         <h1>Bigloo Board</h1>
       </div>
       <div className="app-boards-container">
-        <div className="app-boards">
+        <motion.div variants={elementVariants} className="app-boards">
           {boardss.data.map((item) => (
             <Board
               key={item.id}
@@ -251,9 +263,9 @@ function Dashboard() {
               onSubmit={addboardHandler}
             />
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
