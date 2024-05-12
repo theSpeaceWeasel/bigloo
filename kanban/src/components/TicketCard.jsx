@@ -20,7 +20,7 @@ import { useState } from "react";
 
 
 
-const TicketCard = ({ color, ticket, refetch }) => {
+const TicketCard = ({ ticket, refetch }) => {
   const defaultOptionsDownload = {
     loop: true,
     autoplay: true,
@@ -48,7 +48,10 @@ const TicketCard = ({ color, ticket, refetch }) => {
 
   const [isDownloading, setIsDownloading] = useState(false)
 
-  const { data: tasksStatus = "" } = useGetTicketTasksCompletedQuery(ticket.id);
+  const { data: tasksStatus = "" } = useGetTicketTasksCompletedQuery(ticket.id, {
+    refetchOnMountOrArgChange: true,
+    // Ensure data is refetched on mount
+  });
   const [deleteTicket] = useDeleteTicketMutation();
   // console.log(tasksStatus.completed_tasks_count, tasksStatus.total_tasks_count);
   const percentComplete = Math.round((tasksStatus.completed_tasks_count / tasksStatus.total_tasks_count) * 100);

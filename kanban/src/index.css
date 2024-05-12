@@ -246,7 +246,7 @@ nav {
 }
 
 .ticket-card .progress-bar .progress-indicator {
-  background-color: rgb(26, 51, 131);
+  /* background-color: rgb(26, 51, 131); */
   height: 100%;
 }
 
