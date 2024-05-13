@@ -41,19 +41,3 @@ Route::get('/mail', function () {
 // });
 
 Route::get('/tickets/download-boards-tasks', [TicketController::class, 'downloadBoardsTasks']);
-
-
-Route::get('/csrf', function (Request $request) {
-    return dd($request->cookie('XSRF-TOKEN'));
-});
-
-
-
-// function tokensMatch($request)
-// {
-//     $token = getTokenFromRequest($request);
-
-//     return is_string($request->session()->token()) &&
-//            is_string($token) &&
-//            hash_equals($request->session()->token(), $token);
-// }

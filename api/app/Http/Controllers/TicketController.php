@@ -117,7 +117,7 @@ class TicketController extends Controller
             ->join('boards', 'cards.board_id', '=', 'boards.id')
             ->join('tickets', 'boards.ticket_id', '=', 'tickets.id')
             ->where('tickets.id', $id)
-            ->select('tasks.*')
+            ->select('tasks.*', 'cards.title as card_title', 'cards.description as card_description')
             ->get();
         $data = ['tasks' => $tasks];
         $pdf = Pdf::loadView('achievements.boards-tasks', $data);
