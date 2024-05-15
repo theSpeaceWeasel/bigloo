@@ -15,12 +15,13 @@ import Lottie from "react-lottie";
 import downloadanimation from "../assets/download-animation.json";
 import deleteanimation from "../assets/delete-animation.json";
 import downloadingAnimation from "../assets/downloading-animation.json";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 
 
 
-const TicketCard = ({ ticket, refetch }) => {
+const TicketCard = ({ ticket }) => {
   const defaultOptionsDownload = {
     loop: true,
     autoplay: true,
@@ -46,10 +47,12 @@ const TicketCard = ({ ticket, refetch }) => {
     },
   };
 
+  const { cardTaskUpdated, setCardTaskUpdated } = useAuth()
+
   const [isDownloading, setIsDownloading] = useState(false)
 
-  const { data: tasksStatus = "" } = useGetTicketTasksCompletedQuery(ticket.id, {
-    refetchOnMountOrArgChange: true,
+  const { data: tasksStatus = "", refetch: refetchTasksDone } = useGetTicketTasksCompletedQuery(ticket.id, {
+    // refetchOnMountOrArgChange: true,
     // Ensure data is refetched on mount
   });
   const [deleteTicket] = useDeleteTicketMutation();
@@ -59,8 +62,8 @@ const TicketCard = ({ ticket, refetch }) => {
     try {
       // Call deleteTicket mutation with the ticketId parameter
       await deleteTicket(ticketId);
-      refetch()
-      // Handle success, if needed
+      // refetch()
+      // Handle success, if needed 
     } catch (error) {
       console.error("Error deleting ticket:", error);
       // Handle error, if needed
@@ -84,6 +87,14 @@ const TicketCard = ({ ticket, refetch }) => {
 
   }
 
+  useEffect(() => {
+    if (cardTaskUpdated) {
+      setCardTaskUpdated(false)
+      refetchTasksDone()
+
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cardTaskUpdated])
 
   return (
     <div className="ticket-card">

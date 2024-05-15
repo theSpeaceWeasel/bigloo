@@ -7,6 +7,7 @@ import http from "../api/axios";
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 
 
@@ -14,9 +15,9 @@ import { useState } from "react";
 const TicketPage = () => {
 
   const editMode = false;
+  const { setTicketHasBeenPosted } = useAuth()
 
-  // const [createTicket, { isLoading }] = useCreateTicketMutation();
-  // const { csrf } = useAuth();
+
 
   const schema = yup.object().shape({
     title: yup.string().required(),
@@ -57,27 +58,20 @@ const TicketPage = () => {
           console.log(Math.round((loaded * 100) / total));
         }
       })
-        .then(() => setIsUploading(false))
+
+      setIsUploading(false)
+      reset()
+      setTicketHasBeenPosted(true)
+
+
+
+
     } catch (error) {
       console.log("Error creating ticket");
-      return;
     }
+
     console.log(formData);
 
-
-
-    // const token = decodeURIComponent(document.cookie
-    //   .split('; ')
-    //   .find(row => row.startsWith('XSRF-TOKEN='))
-    //   ?.split('=')[1]);
-
-    // // reader.onloadend = () => {
-
-    // // };
-    // createTicket({ data, token })
-
-
-    reset();
   }
 
 

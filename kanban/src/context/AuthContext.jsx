@@ -17,12 +17,8 @@ export const AuthProvider = ({ children }) => {
 
 
 
-
-    // useEffect(() => {
-    //     if (!Object.keys(user).length && !user.name) {
-    //         getUser(); // Call getUser() only if user is empty
-    //     }
-    // }, []);
+    const [ticketHasBeenPosted, setTicketHasBeenPosted] = useState(false)
+    const [cardTaskUpdated, setCardTaskUpdated] = useState(false)
 
     const csrf = () => axios.get('/sanctum/csrf-cookie');
 
@@ -71,7 +67,19 @@ export const AuthProvider = ({ children }) => {
         navigate("/login")
     }
 
-    return <AuthContext.Provider value={{ user, csrf, login, logging, signup, getUser, logout }}>
+    return <AuthContext.Provider value={{
+        user,
+        csrf,
+        login,
+        logging,
+        signup,
+        getUser,
+        logout,
+        ticketHasBeenPosted,
+        setTicketHasBeenPosted,
+        cardTaskUpdated,
+        setCardTaskUpdated
+    }}>
         {children}
     </AuthContext.Provider>
 }

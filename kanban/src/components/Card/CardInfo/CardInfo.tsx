@@ -18,6 +18,7 @@ import {
   useDeleteTaskFromCardMutation,
 } from "../../../services/card";
 import { useGetBoardsQuery } from "../../../services/board";
+import { useAuth } from "../../../context/AuthContext";
 
 interface CardInfoProps {
   onClose: () => void;
@@ -33,6 +34,7 @@ function CardInfo(props: CardInfoProps) {
   const [cardValues, setCardValues] = useState<ICard>({
     ...card,
   });
+  const { setCardTaskUpdated } = useAuth();
 
   const [updateCardTitle, { isLoading }] = useUpdateCardTitleMutation();
   const [updateCardDescription] = useUpdateCardDescriptionMutation();
@@ -120,6 +122,7 @@ function CardInfo(props: CardInfoProps) {
 
   const removeTask = (id: number) => {
     deleteTaskFromCard(id);
+    setCardTaskUpdated(true);
     refetchBoards();
 
     // console.log(id);
@@ -133,6 +136,7 @@ function CardInfo(props: CardInfoProps) {
 
   const updateTask = (id: number, value: boolean) => {
     updateCardTask({ id, completed: value });
+    setCardTaskUpdated(true);
     refetchBoards();
     // console.log("id", id, "bool", value);
     // const tasks = [...cardValues.tasks];

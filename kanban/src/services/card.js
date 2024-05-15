@@ -95,7 +95,7 @@ export const cardApi = createApi({
                 method: 'PUT',
                 body: { completed },
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: ['tasksDone'],
         }),
 
         updateDueDateForCard: builder.mutation({

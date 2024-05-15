@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { tagTypes } from "./tags";
+
 
 export const ticketApi = createApi({
   reducerPath: 'ticketApi',
@@ -17,7 +19,7 @@ export const ticketApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['tickets'],
+  tagTypes,
 
   endpoints: (builder) => ({
 
@@ -28,14 +30,8 @@ export const ticketApi = createApi({
 
     getTicketTasksCompleted: builder.query({
       query: (ticketId) => `api/ticket/${ticketId}/tasks-completed`,
+      providesTags: ['tasksDone'],
     }),
-
-    // downloadTicket: builder.mutation({
-    //   query: (id) => ({
-    //     url: `/api/tickets/download-boards-tasks/${id}`,
-    //     method: 'POST',
-    //   })
-    // }),
 
     deleteTicket: builder.mutation({
       query: (id) => ({
@@ -50,8 +46,6 @@ export const ticketApi = createApi({
 });
 
 export const { useGetTicketsQuery,
-  useCreateTicketMutation,
   useGetTicketTasksCompletedQuery,
   useDeleteTicketMutation,
-  useDownloadTicketMutation
 } = ticketApi;

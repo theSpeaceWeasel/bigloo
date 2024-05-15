@@ -5,11 +5,13 @@ import { useSearchParams } from 'react-router-dom';
 import { motion } from "framer-motion"
 import Lottie from "react-lottie";
 import loadinganimation from "./laptop-animation.json";
+import { useEffect } from 'react';
+
 
 
 const Tickets = () => {
 
-  const { user } = useAuth()
+  const { user, ticketHasBeenPosted, setTicketHasBeenPosted } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams();
   const ticketSearch = searchParams.get("search") || "";
   const filter = searchParams.get("sorting") || "";
@@ -47,11 +49,10 @@ const Tickets = () => {
     refetch: refetchTickets,
     // isLoading,
     isFetching,
-    // isError,
-    // error,
+
   } = useGetTicketsQuery({ userId: user.id, search: ticketSearch ?? null, sorting: filter ?? null }, {
-    refetchOnMountOrArgChange: true,
-    // Ensure data is refetched on mount
+    // refetchOnMountOrArgChange: true,
+    // Esnsure data is refetched on mount
   });
   //with user.id
 
@@ -66,6 +67,16 @@ const Tickets = () => {
     ...new Set(tickets.data?.map(({ category }) => category).sort())
   ]
   console.log(uniqueCategories)
+
+  useEffect(() => {
+    if (ticketHasBeenPosted) {
+      refetchTickets();
+      setTicketHasBeenPosted(false)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ticketHasBeenPosted])
+
   return (
 
     <div className="dashboard">
@@ -82,40 +93,39 @@ const Tickets = () => {
           onChange={handleInputChange}
         />
       </div>
-
-      <h1>Your Tickets</h1>
-      {isFetching ? (<Lottie
+      {isFetching ? <Lottie
         options={defaultOptions}
-        style={{ marginTop: "10rem" }}
-        height={400}
+        height={60}
         width={400}
-      />) :
-        <motion.div
-          variants={gridVariants}
-          initial="hidden"
-          animate="show"
-          className="ticket-container">
-          {tickets.data && uniqueCategories?.map((uniqueCategory, categoryIndex) => (
-            <motion.div
-              variants={elementVariants}
-              // transition={{ staggerChildren: 0.1 }}
-              key={categoryIndex}>
-              <h3>{uniqueCategory}</h3>
+      /> : null}
+      <h1>Your Tickets</h1>
 
-              {tickets.data.filter(ticket => ticket.category === uniqueCategory).map((filteredTicket, i) => (
-                <TicketCard
-                  key={i}
-                  id={i}
-                  color={filteredTicket.color}
-                  ticket={filteredTicket}
-                  refetch={refetchTickets}
-                />
-              ))}
+      <motion.div
+        variants={gridVariants}
+        initial="hidden"
+        animate="show"
+        className="ticket-container">
+        {tickets.data && uniqueCategories?.map((uniqueCategory, categoryIndex) => (
+          <motion.div
+            variants={elementVariants}
+            // transition={{ staggerChildren: 0.1 }}
+            key={categoryIndex}>
+            <h3>{uniqueCategory}</h3>
 
-            </motion.div>
-          ))}
-        </motion.div>
-      }
+            {tickets.data.filter(ticket => ticket.category === uniqueCategory).map((filteredTicket, i) => (
+              <TicketCard
+                key={i}
+                id={i}
+                color={filteredTicket.color}
+                ticket={filteredTicket}
+              // refetch={refetchTickets}
+              />
+            ))}
+
+          </motion.div>
+        ))}
+      </motion.div>
+
     </div >
 
   )
