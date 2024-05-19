@@ -27,6 +27,7 @@ interface CardInfoProps {
   updateCard: (boardId: number, cardId: number, card: ICard) => void;
   refetchBoards: () => void;
 }
+
 function CardInfo(props: CardInfoProps) {
   const { onClose, card, boardId, updateCard, refetchBoards } = props;
 
@@ -34,7 +35,7 @@ function CardInfo(props: CardInfoProps) {
   const [cardValues, setCardValues] = useState<ICard>({
     ...card,
   });
-  const { setCardTaskUpdated } = useAuth();
+  const { setCardTaskUpdated }: any = useAuth();
 
   const [updateCardTitle, { isLoading }] = useUpdateCardTitleMutation();
   const [updateCardDescription] = useUpdateCardDescriptionMutation();

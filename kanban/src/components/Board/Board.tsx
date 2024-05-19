@@ -13,23 +13,13 @@ interface BoardProps {
   addCard: (boardId: number, title: string) => void;
   removeBoard: (boardId: number) => void;
   removeCard: (boardId: number, cardId: number) => void;
-  onDragEnd: (boardId: number, cardId: number) => void;
-  onDragEnter: (boardId: number, cardId: number) => void;
   updateCard: (boardId: number, cardId: number, card: ICard) => void;
   refetchBoards: () => void;
 }
 
 function Board(props: BoardProps) {
-  const {
-    board,
-    addCard,
-    removeBoard,
-    removeCard,
-    onDragEnd,
-    onDragEnter,
-    updateCard,
-    refetchBoards,
-  } = props;
+  const { board, addCard, removeBoard, removeCard, updateCard, refetchBoards } =
+    props;
   // console.log(board.id);
   const [showDropdown, setShowDropdown] = useState(false);
   return (
@@ -65,8 +55,6 @@ function Board(props: BoardProps) {
               card={item}
               boardId={board.id}
               removeCard={removeCard}
-              onDragEnter={onDragEnter}
-              onDragEnd={onDragEnd}
               updateCard={updateCard}
               refetchBoards={refetchBoards}
             />

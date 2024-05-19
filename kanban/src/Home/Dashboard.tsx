@@ -26,20 +26,6 @@ function Dashboard() {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  // const [boards, setBoards] = useState<IBoard[]>([]);
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // async function fetchData() {
-  //   const boards: IBoard[] = await fetchBoardList();
-  //   setBoards(boards);
-  // }
-  // // Add new board functionality
-  // const [targetCard, setTargetCard] = useState({
-  //   boardId: 0,
-  //   cardId: 0,
-  // });
 
   const [
     createBoard,
@@ -77,7 +63,7 @@ function Dashboard() {
       document.cookie
         .split("; ")
         .find((row) => row.startsWith("XSRF-TOKEN="))
-        ?.split("=")[1]
+        ?.split("=")[1] || ""
     );
 
     createBoard({
@@ -100,120 +86,22 @@ function Dashboard() {
   const removeBoard = (boardId: number) => {
     deleteBoard(boardId);
     refetchBoards();
-    // console.log(boardId);
-    // const boardIndex = boards.findIndex((item: IBoard) => item.id === boardId);
-    // if (boardIndex < 0) return;
-    // const tempBoardsList = [...boards];
-    // tempBoardsList.splice(boardIndex, 1);
-    // setBoards(tempBoardsList);
   };
 
   const addCardHandler = (boardId: number, title: string) => {
-    console.log(boardId);
-    const token: string = decodeURIComponent(
-      document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("XSRF-TOKEN="))
-        ?.split("=")[1]
-    );
-
-    createCard(
-      {
-        board_id: boardId,
-        title,
-      },
-      token
-    );
+    createCard({
+      board_id: boardId,
+      title,
+    });
     refetchBoards();
-    // const boardIndex = boards.findIndex((item: IBoard) => item.id === boardId);
-    // if (boardIndex < 0) return;
-
-    // const tempBoardsList = [...boards];
-    // tempBoardsList[boardIndex].cards.push({
-    //   id: Date.now() + Math.random() * 2,
-    //   title,
-    //   labels: [],
-    //   date: "",
-    //   tasks: [],
-    //   desc: "",
-    // });
-    // setBoards(tempBoardsList);
   };
 
   const removeCard = (boardId: number, cardId: number) => {
     deleteCard(cardId);
     refetchBoards();
-
-    // console.log(cardId);
-
-    // const boardIndex = boards.findIndex((item: IBoard) => item.id === boardId);
-    // if (boardIndex < 0) return;
-
-    // const tempBoardsList = [...boards];
-    // const cards = tempBoardsList[boardIndex].cards;
-
-    // const cardIndex = cards.findIndex((item) => item.id === cardId);
-    // if (cardIndex < 0) return;
-
-    // cards.splice(cardIndex, 1);
-    // setBoards(tempBoardsList);
   };
 
-  const updateCard = (boardId: number, cardId: number, card: ICard) => {
-    // const boardIndex = boards.findIndex((item) => item.id === boardId);
-    // if (boardIndex < 0) return;
-    // const tempBoardsList = [...boards];
-    // const cards = tempBoardsList[boardIndex].cards;
-    // const cardIndex = cards.findIndex((item) => item.id === cardId);
-    // if (cardIndex < 0) return;
-    // tempBoardsList[boardIndex].cards[cardIndex] = card;
-    // setBoards(tempBoardsList);
-  };
-
-  const onDragEnd = (boardId: number, cardId: number) => {
-    const sourceBoardIndex = boardss.findIndex(
-      (item: IBoard) => item.id === boardId
-    );
-    if (sourceBoardIndex < 0) return;
-
-    const sourceCardIndex = boardss[sourceBoardIndex]?.cards?.findIndex(
-      (item) => item.id === cardId
-    );
-    if (sourceCardIndex < 0) return;
-
-    const targetBoardIndex = boardss.findIndex(
-      (item: IBoard) => item.id === targetCard.boardId
-    );
-    if (targetBoardIndex < 0) return;
-
-    const targetCardIndex = boardss[targetBoardIndex]?.cards?.findIndex(
-      (item) => item.id === targetCard.cardId
-    );
-    if (targetCardIndex < 0) return;
-
-    const tempBoardsList = [...boardss];
-    const sourceCard = tempBoardsList[sourceBoardIndex].cards[sourceCardIndex];
-    tempBoardsList[sourceBoardIndex].cards.splice(sourceCardIndex, 1);
-    tempBoardsList[targetBoardIndex].cards.splice(
-      targetCardIndex,
-      0,
-      sourceCard
-    );
-    setBoards(tempBoardsList);
-
-    setTargetCard({
-      boardId: 0,
-      cardId: 0,
-    });
-  };
-
-  const onDragEnter = (boardId: number, cardId: number) => {
-    if (targetCard.cardId === cardId) return;
-    setTargetCard({
-      boardId: boardId,
-      cardId: cardId,
-    });
-  };
+  const updateCard = (boardId: number, cardId: number, card: ICard) => {};
 
   const gridVariants = {
     hidden: { opacity: 0 },
@@ -247,8 +135,6 @@ function Dashboard() {
               addCard={addCardHandler}
               removeBoard={() => removeBoard(item.id)}
               removeCard={removeCard}
-              onDragEnd={onDragEnd}
-              onDragEnter={onDragEnter}
               updateCard={updateCard}
               refetchBoards={refetchBoards}
             />

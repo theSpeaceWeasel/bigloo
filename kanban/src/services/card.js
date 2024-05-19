@@ -28,7 +28,7 @@ export const cardApi = createApi({
         // }),
 
         createCard: builder.mutation({
-            query: (card, token) => ({
+            query: (card) => ({
                 url: `/api/cards`,
                 // includeCredentials: true,
                 credentials: "include",
@@ -37,7 +37,7 @@ export const cardApi = createApi({
                 headers: {
                     "Content-Type": `application/json`,
                     "Accept": "application/json",
-                    "X-XSRF-TOKEN": token,
+                    // "X-XSRF-TOKEN": token,
                     "X-Requested-With": "XMLHttpRequest"
 
                 }
