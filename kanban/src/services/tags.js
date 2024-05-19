@@ -1,1 +1,1 @@
-export const tagTypes = ['boards', 'tickets', 'tasksDone'];
+export const tagTypes = ['boards', 'tickets', 'tasksDone', 'cards'];

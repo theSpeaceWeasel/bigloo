@@ -13,7 +13,6 @@ import { useCreateCardMutation, useDeleteCardMutation } from "../services/card";
 import Lottie from "react-lottie";
 import loadinganimation from "./loading.json";
 import { motion } from "framer-motion";
-import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
   const { ticketId } = useParams();
@@ -26,8 +25,6 @@ function Dashboard() {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-
-  const { boardHasBeenCreated, setBoardHasBeenCreated }: any = useAuth();
 
   const [
     createBoard,
@@ -75,19 +72,10 @@ function Dashboard() {
       },
       token,
     });
-    setBoardHasBeenCreated(true);
-    // const tempBoardsList = [...boards];
-    // tempBoardsList.push({
-    //   id: Date.now() + Math.random() * 2,
-    //   title: name,
-    //   cards: [],
-    // });
-    // setBoards(tempBoardsList);
   };
 
   const removeBoard = (boardId: number) => {
     deleteBoard(boardId);
-    refetchBoards();
   };
 
   const addCardHandler = (boardId: number, title: string) => {
@@ -95,12 +83,10 @@ function Dashboard() {
       board_id: boardId,
       title,
     });
-    refetchBoards();
   };
 
   const removeCard = (boardId: number, cardId: number) => {
     deleteCard(cardId);
-    // refetchBoards();
   };
 
   const updateCard = (boardId: number, cardId: number, card: ICard) => {};
@@ -110,15 +96,6 @@ function Dashboard() {
     show: { opacity: 1, transition: { staggerChildren: 0.25 } },
   };
   const elementVariants = { hidden: { opacity: 0 }, show: { opacity: 1 } };
-
-  useEffect(() => {
-    if (boardHasBeenCreated) {
-      refetchBoards();
-      setBoardHasBeenCreated(false);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boardHasBeenCreated]);
 
   return (
     <motion.div

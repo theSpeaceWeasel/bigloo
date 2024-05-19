@@ -22,10 +22,11 @@ export const cardApi = createApi({
 
     endpoints: (builder) => ({
 
-        // getCards: builder.query({
-        //     query: () => `api/cards`,
-        //     // providesTags: ['cards'],
-        // }),
+        getCardsFromBoard: builder.query({
+            query: (boardId) => `/api/cards/${boardId}`,
+            // refetchOnMountOrArgChange: true,
+            providesTags: ['cards'],
+        }),
 
         createCard: builder.mutation({
             query: (card) => ({
@@ -42,7 +43,7 @@ export const cardApi = createApi({
 
                 }
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: ['cards'],
         }),
 
         updateCardTitle: builder.mutation({
@@ -113,7 +114,7 @@ export const cardApi = createApi({
                 url: `/api/cards/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: ['cards'],
         }),
 
         deleteLabelFromCard: builder.mutation({
@@ -148,4 +149,5 @@ export const {
     useDeleteLabelFromCardMutation,
     useDeleteTaskFromCardMutation,
     useAddTaskToCardMutation,
+    useGetCardsFromBoardQuery,
 } = cardApi;

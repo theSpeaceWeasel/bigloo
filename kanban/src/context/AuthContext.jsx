@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
 
     const [ticketHasBeenPosted, setTicketHasBeenPosted] = useState(false)
     const [cardTaskUpdated, setCardTaskUpdated] = useState(false)
-    const [boardHasBeenCreated, setBoardHasBeenCreated] = useState(false)
 
     const csrf = () => axios.get('/sanctum/csrf-cookie');
 
@@ -80,8 +79,6 @@ export const AuthProvider = ({ children }) => {
         setTicketHasBeenPosted,
         cardTaskUpdated,
         setCardTaskUpdated,
-        boardHasBeenCreated,
-        setBoardHasBeenCreated
     }}>
         {children}
     </AuthContext.Provider>

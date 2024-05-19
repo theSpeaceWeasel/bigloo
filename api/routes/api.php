@@ -35,7 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //cards
 
-    Route::get('/cards', [CardController::class, 'index']);
+    Route::get('/cards/{boardId}', [CardController::class, 'index']);
     Route::post('/cards', [CardController::class, 'store']);
     Route::post('/cards/{cardId}/labels', [CardController::class, 'addLabelToCard']);
     Route::post('/cards/{cardId}/tasks', [CardController::class, 'addTaskToCard']);

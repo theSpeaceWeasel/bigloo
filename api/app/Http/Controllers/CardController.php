@@ -16,9 +16,9 @@ class CardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($boardId)
     {
-        $cards = Card::with(['board', 'labels', 'tasks'])->get();
+        $cards = Card::with(['board', 'labels', 'tasks'])->where('board_id', $boardId)->get();
         return CardResource::collection($cards);
     }
 
