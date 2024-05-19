@@ -4,7 +4,6 @@ import Board from "../components/Board/Board";
 import "./Dashboard.css";
 import CustomInput from "../components/CustomInput/CustomInput";
 import { ICard, IBoard } from "../Interfaces/Kanban";
-import { fetchBoardList, updateLocalStorageBoards } from "../Helper/APILayers";
 import {
   useGetBoardsQuery,
   useCreateBoardMutation,
@@ -14,6 +13,7 @@ import { useCreateCardMutation, useDeleteCardMutation } from "../services/card";
 import Lottie from "react-lottie";
 import loadinganimation from "./loading.json";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
   const { ticketId } = useParams();
@@ -26,6 +26,8 @@ function Dashboard() {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+
+  const { boardHasBeenCreated, setBoardHasBeenCreated }: any = useAuth();
 
   const [
     createBoard,
@@ -45,7 +47,7 @@ function Dashboard() {
     // isError,
     // error,
   } = useGetBoardsQuery(ticketId, {
-    refetchOnMountOrArgChange: true,
+    // refetchOnMountOrArgChange: true,
     skip: !ticketId,
     // Ensure data is refetched on mount
   });
@@ -73,7 +75,7 @@ function Dashboard() {
       },
       token,
     });
-    refetchBoards();
+    setBoardHasBeenCreated(true);
     // const tempBoardsList = [...boards];
     // tempBoardsList.push({
     //   id: Date.now() + Math.random() * 2,
@@ -98,7 +100,7 @@ function Dashboard() {
 
   const removeCard = (boardId: number, cardId: number) => {
     deleteCard(cardId);
-    refetchBoards();
+    // refetchBoards();
   };
 
   const updateCard = (boardId: number, cardId: number, card: ICard) => {};
@@ -109,14 +111,16 @@ function Dashboard() {
   };
   const elementVariants = { hidden: { opacity: 0 }, show: { opacity: 1 } };
 
-  return isFetching ? (
-    <Lottie
-      options={defaultOptions}
-      // style={{ marginRight: "100px" }}
-      height={400}
-      width={400}
-    />
-  ) : (
+  useEffect(() => {
+    if (boardHasBeenCreated) {
+      refetchBoards();
+      setBoardHasBeenCreated(false);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boardHasBeenCreated]);
+
+  return (
     <motion.div
       variants={gridVariants}
       initial="hidden"
@@ -126,31 +130,40 @@ function Dashboard() {
       <div className="app-nav">
         <h1>Bigloo Board</h1>
       </div>
-      <div className="app-boards-container">
-        <motion.div variants={elementVariants} className="app-boards">
-          {boardss.data.map((item) => (
-            <Board
-              key={item.id}
-              board={item}
-              addCard={addCardHandler}
-              removeBoard={() => removeBoard(item.id)}
-              removeCard={removeCard}
-              updateCard={updateCard}
-              refetchBoards={refetchBoards}
-            />
-          ))}
-          <div className="app-boards-last">
-            <CustomInput
-              displayClass="app-boards-add-board"
-              editClass="app-boards-add-board-edit"
-              placeholder="Enter Board Name"
-              text="AddxxBoard"
-              buttonText="Add..Board"
-              onSubmit={addboardHandler}
-            />
-          </div>
-        </motion.div>
-      </div>
+      {isFetching ? (
+        <Lottie
+          options={defaultOptions}
+          style={{ marginRight: "100px" }}
+          height={60}
+          width={60}
+        />
+      ) : (
+        <div className="app-boards-container">
+          <motion.div variants={elementVariants} className="app-boards">
+            {boardss.data.map((item) => (
+              <Board
+                key={item.id}
+                board={item}
+                addCard={addCardHandler}
+                removeBoard={() => removeBoard(item.id)}
+                removeCard={removeCard}
+                updateCard={updateCard}
+                refetchBoards={refetchBoards}
+              />
+            ))}
+            <div className="app-boards-last">
+              <CustomInput
+                displayClass="app-boards-add-board"
+                editClass="app-boards-add-board-edit"
+                placeholder="Enter Board Name"
+                text="AddxxBoard"
+                buttonText="Add..Board"
+                onSubmit={addboardHandler}
+              />
+            </div>
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 }
