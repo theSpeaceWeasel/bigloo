@@ -18,6 +18,11 @@ export const boardApi = createApi({
             return headers;
         },
     }),
+    defaultOptions: {
+        queries: {
+            keepUnusedDataFor: 3000,  // Cache data for 5 minutes (300 seconds) by default
+        },
+    },
     tagTypes,
 
     endpoints: (builder) => ({

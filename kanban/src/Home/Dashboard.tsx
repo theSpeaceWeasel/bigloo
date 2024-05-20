@@ -86,7 +86,7 @@ function Dashboard() {
   };
 
   const removeCard = (boardId: number, cardId: number) => {
-    deleteCard(cardId);
+    deleteCard({ boardId, cardId });
   };
 
   const updateCard = (boardId: number, cardId: number, card: ICard) => {};

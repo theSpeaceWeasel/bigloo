@@ -18,6 +18,11 @@ export const cardApi = createApi({
             return headers;
         },
     }),
+    defaultOptions: {
+        queries: {
+            keepUnusedDataFor: 3000,  // Cache data for 5 minutes (300 seconds) by default
+        },
+    },
     tagTypes,
 
     endpoints: (builder) => ({
@@ -25,7 +30,7 @@ export const cardApi = createApi({
         getCardsFromBoard: builder.query({
             query: (boardId) => `/api/cards/${boardId}`,
             // refetchOnMountOrArgChange: true,
-            providesTags: ['cards'],
+            providesTags: (result, error, boardId) => [{ type: 'Cards', id: boardId }],
         }),
 
         createCard: builder.mutation({
@@ -43,7 +48,7 @@ export const cardApi = createApi({
 
                 }
             }),
-            invalidatesTags: ['cards'],
+            invalidatesTags: (result, error, { board_id }) => [{ type: 'Cards', id: board_id }],
         }),
 
         updateCardTitle: builder.mutation({
@@ -110,11 +115,11 @@ export const cardApi = createApi({
 
 
         deleteCard: builder.mutation({
-            query: (id) => ({
-                url: `/api/cards/${id}`,
+            query: ({ cardId }) => ({
+                url: `/api/cards/${cardId}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['cards'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
         deleteLabelFromCard: builder.mutation({
