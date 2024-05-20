@@ -91,7 +91,6 @@ const TicketCard = ({ ticket }) => {
     if (cardTaskUpdated) {
       setCardTaskUpdated(false)
       refetchTasksDone()
-
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardTaskUpdated])

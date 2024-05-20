@@ -31,6 +31,7 @@ function Card(props: CardProps) {
           refetchBoards={refetchBoards}
         />
       )}
+
       <div
         className="card"
         key={card.id}

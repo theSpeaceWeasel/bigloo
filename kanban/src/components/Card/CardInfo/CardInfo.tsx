@@ -7,6 +7,7 @@ import CustomInput from "../../CustomInput/CustomInput";
 import "./CardInfo.css";
 import { ICard, ILabel, ITask } from "../../../Interfaces/Kanban";
 import Chip from "../../Common/Chip";
+import { useAuth } from "../../../context/AuthContext";
 import {
   useUpdateCardTitleMutation,
   useUpdateCardDescriptionMutation,
@@ -17,7 +18,6 @@ import {
   useDeleteLabelFromCardMutation,
   useDeleteTaskFromCardMutation,
 } from "../../../services/card";
-import { useAuth } from "../../../context/AuthContext";
 
 interface CardInfoProps {
   onClose: () => void;
@@ -34,7 +34,6 @@ function CardInfo(props: CardInfoProps) {
   const [cardValues, setCardValues] = useState<ICard>({
     ...card,
   });
-  const { setCardTaskUpdated }: any = useAuth();
 
   const [updateCardTitle, { isLoading }] = useUpdateCardTitleMutation();
   const [updateCardDescription] = useUpdateCardDescriptionMutation();
@@ -44,59 +43,37 @@ function CardInfo(props: CardInfoProps) {
   const [updateDueDateForCard] = useUpdateDueDateForCardMutation();
   const [deleteLabelFromCard] = useDeleteLabelFromCardMutation();
   const [deleteTaskFromCard] = useDeleteTaskFromCardMutation();
-  // const { refetch: refetchBoards } = useGetBoardsQuery(undefined, {});
+
+  const { setCardTaskUpdated }: any = useAuth();
 
   const updatingTitle = (title, cardId) => {
     // console.log(cardId);
-    updateCardTitle({ title, cardId });
+    updateCardTitle({ title, cardId, boardId });
   };
 
-  const updatingDescription = (description, cardId) => {
+  const updatingDescription = (description: string, cardId: number) => {
     // console.log(cardId);
-    updateCardDescription({ description, cardId });
+    updateCardDescription({ description, cardId, boardId });
   };
 
   const updateTitle = (value: string) => {
     // console.log(value, card.id);
     updatingTitle(value, card.id);
-    refetchBoards();
+
     // setCardValues({ ...cardValues, title: value });
   };
 
   const updateDesc = (value: string) => {
     updatingDescription(value, card.id);
-    refetchBoards();
-    // setCardValues({ ...cardValues, desc: value });
   };
 
-  const addLabel = (label: ILabel, cardId) => {
-    // const index = cardValues.labels.findIndex(
-    //   (item) => item.text === label.text
-    // );
-    // if (index > -1) return; //if label text already exist then return
-    // console.log(label);
-    addLabelToCard({ label, cardId });
+  const addLabel = (label: ILabel, cardId: number) => {
+    addLabelToCard({ label, cardId, boardId });
     setSelectedColor("");
-    refetchBoards();
-    // setCardValues({
-    //   ...cardValues,
-    //   labels: [...cardValues.labels, label],
-    // });
   };
 
   const removeLabel = (label: ILabel) => {
-    deleteLabelFromCard(label.id);
-    refetchBoards();
-
-    // console.log("label deleted", label);
-    // const tempLabels = cardValues.labels.filter(
-    //   (item) => item.text !== label.text
-    // );
-
-    // setCardValues({
-    //   ...cardValues,
-    //   labels: tempLabels,
-    // });
+    deleteLabelFromCard({ labelId: label.id, boardId });
   };
 
   const addingTask = (value, cardId) => {
@@ -104,49 +81,20 @@ function CardInfo(props: CardInfoProps) {
       text: value,
       completed: false,
     };
-    addTaskToCard({ task, cardId });
+    addTaskToCard({ task, cardId, boardId });
   };
+
   const addTask = (value: string) => {
     addingTask(value, card.id);
-    refetchBoards();
-    // const task: ITask = {
-    //   id: Date.now() + Math.random() * 2,
-    //   completed: false,
-    //   text: value,
-    // };
-    // setCardValues({
-    //   ...cardValues,
-    //   tasks: [...cardValues.tasks, task],
-    // });
   };
 
   const removeTask = (id: number) => {
-    deleteTaskFromCard(id);
-    setCardTaskUpdated(true);
-    refetchBoards();
-
-    // console.log(id);
-    // const tasks = [...cardValues.tasks];
-    // const tempTasks = tasks.filter((item) => item.id !== id);
-    // setCardValues({
-    //   ...cardValues,
-    //   tasks: tempTasks,
-    // });
+    deleteTaskFromCard({ taskId: id, boardId });
   };
 
   const updateTask = (id: number, value: boolean) => {
-    updateCardTask({ id, completed: value });
+    updateCardTask({ taskId: id, completed: value, boardId });
     setCardTaskUpdated(true);
-    refetchBoards();
-    // console.log("id", id, "bool", value);
-    // const tasks = [...cardValues.tasks];
-    // const index = tasks.findIndex((item) => item.id === id);
-    // if (index < 0) return;
-    // tasks[index].completed = Boolean(value);
-    // setCardValues({
-    //   ...cardValues,
-    //   tasks,
-    // });
   };
 
   const calculatePercent = () => {
@@ -162,12 +110,7 @@ function CardInfo(props: CardInfoProps) {
     const cardId = card.id;
     const formattedDueDate = new Date(date).toISOString().substr(0, 10);
     // console.log(date);
-    updateDueDateForCard({ date: formattedDueDate, cardId });
-    refetchBoards();
-    // // setCardValues({
-    // //   ...cardValues,
-    // //   date,
-    // // });
+    updateDueDateForCard({ date: formattedDueDate, cardId, boardId });
   };
 
   useEffect(() => {

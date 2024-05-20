@@ -61,7 +61,7 @@ export const cardApi = createApi({
                     "Accept": "application/json"
                 },
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
         updateCardDescription: builder.mutation({
@@ -74,7 +74,7 @@ export const cardApi = createApi({
                     "Accept": "application/json"
                 },
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
         addLabelToCard: builder.mutation({
@@ -83,7 +83,7 @@ export const cardApi = createApi({
                 method: 'POST',
                 body: { ...label },
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
         addTaskToCard: builder.mutation({
@@ -92,16 +92,16 @@ export const cardApi = createApi({
                 method: 'POST',
                 body: { ...task },
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
         updateCardTask: builder.mutation({
-            query: ({ id, completed }) => ({
-                url: `/api/tasks/${id}`,
+            query: ({ taskId, completed }) => ({
+                url: `/api/tasks/${taskId}`,
                 method: 'PUT',
                 body: { completed },
             }),
-            invalidatesTags: ['tasksDone'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
         updateDueDateForCard: builder.mutation({
@@ -110,7 +110,7 @@ export const cardApi = createApi({
                 method: 'POST',
                 body: { date },
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
 
@@ -123,19 +123,19 @@ export const cardApi = createApi({
         }),
 
         deleteLabelFromCard: builder.mutation({
-            query: (labelId) => ({
+            query: ({ labelId }) => ({
                 url: `/api/labels/${labelId}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
         deleteTaskFromCard: builder.mutation({
-            query: (taskId) => ({
+            query: ({ taskId }) => ({
                 url: `/api/tasks/${taskId}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
         }),
 
     }),

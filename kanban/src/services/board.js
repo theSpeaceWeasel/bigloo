@@ -51,18 +51,6 @@ export const boardApi = createApi({
             invalidatesTags: (result, error, { board }) => [{ type: 'Cards', id: board.ticket_id }],
         }),
 
-        // updateBoard: builder.mutation({
-        //     query: ({ id, title }) => ({
-        //         url: `boards/${id}`,
-        //         method: 'PUT',
-        //         body: { title },
-        //         headers: {
-        //             "Content-Type": `application/json`,
-        //             "Accept": "application/json"
-        //         },
-        //     }),
-        //     invalidatesTags: ['boards'],
-        // }),
 
         deleteBoard: builder.mutation({
             query: ({ boardId }) => ({
