@@ -398,6 +398,10 @@ input[type="submit"] {
   }
 }
 
+.deleteBoardBtn:active,
+.deleteCardBtn:active {
+  transform: scale(0.95);
+}
 /* For screens smaller than 480px (phones) */
 @media screen and (max-width: 480px) {
   .dashboard {

@@ -30,7 +30,7 @@ export const boardApi = createApi({
         getBoards: builder.query({
             query: (ticketId) => `/api/boards/${ticketId}`,
             // refetchOnMountOrArgChange: true,
-            providesTags: ['boards'],
+            providesTags: (result, error, ticketId) => [{ type: 'Cards', id: ticketId }],
         }),
 
         createBoard: builder.mutation({
@@ -48,7 +48,7 @@ export const boardApi = createApi({
 
                 }
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { board }) => [{ type: 'Cards', id: board.ticket_id }],
         }),
 
         // updateBoard: builder.mutation({
@@ -65,11 +65,11 @@ export const boardApi = createApi({
         // }),
 
         deleteBoard: builder.mutation({
-            query: (id) => ({
-                url: `/api/boards/${id}`,
+            query: ({ boardId }) => ({
+                url: `/api/boards/${boardId}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['boards'],
+            invalidatesTags: (result, error, { ticketId }) => [{ type: 'Cards', id: ticketId }],
         }),
 
     }),

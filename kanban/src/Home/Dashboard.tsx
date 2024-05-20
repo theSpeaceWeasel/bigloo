@@ -75,7 +75,7 @@ function Dashboard() {
   };
 
   const removeBoard = (boardId: number) => {
-    deleteBoard(boardId);
+    deleteBoard({ boardId, ticketId });
   };
 
   const addCardHandler = (boardId: number, title: string) => {

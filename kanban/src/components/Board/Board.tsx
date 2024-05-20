@@ -64,7 +64,12 @@ function Board(props: BoardProps) {
                 class="board-dropdown"
                 onClose={() => setShowDropdown(false)}
               >
-                <p onClick={() => removeBoard(board?.id)}>Delete Board</p>
+                <p
+                  className="deleteBoardBtn"
+                  onClick={() => removeBoard(board?.id)}
+                >
+                  Delete Board
+                </p>
               </Dropdown>
             )}
           </div>

@@ -17,7 +17,6 @@ import {
   useDeleteLabelFromCardMutation,
   useDeleteTaskFromCardMutation,
 } from "../../../services/card";
-import { useGetBoardsQuery } from "../../../services/board";
 import { useAuth } from "../../../context/AuthContext";
 
 interface CardInfoProps {
