@@ -32,7 +32,7 @@ const TicketPage = () => {
 
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  console.log(progress);
+  // console.log(progress);
 
   // console.log(isLoading)
   const onSubmitHandler = async (data) => {

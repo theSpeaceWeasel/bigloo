@@ -24,23 +24,24 @@ export const AuthProvider = ({ children }) => {
 
     const navigate = useNavigate();
 
-    const getUser = async () => {
-        try {
-            const { data } = await axios.get('/api/user')
-            localStorage.setItem('user', JSON.stringify(data));
-            setUser(data);
-        } catch (error) {
-            if (error.response.status === 401) navigate("/login");
-        }
+    // const getUser = async () => {
+    //     try {
+    //         const { data } = await axios.get('/api/user')
+    //         localStorage.setItem('user', JSON.stringify(data));
+    //         setUser(data);
+    //     } catch (error) {
+    //         if (error.response.status === 401) navigate("/login");
+    //     }
 
-    }
+    // }
 
     const login = async (data) => {
         setLogging(true)
         await csrf()
         try {
-            await axios.post('/login', data);
-            await getUser();
+            const response = await axios.post('/login', data);
+            localStorage.setItem('user', JSON.stringify(response.data));
+            setUser(response.data);
             setLogging(false)
             navigate("/");
         } catch (error) {
@@ -52,8 +53,9 @@ export const AuthProvider = ({ children }) => {
         setLogging(true)
         await csrf();
         try {
-            await axios.post('/register', data);
-            await getUser();
+            const response = await axios.post('/register', data);
+            localStorage.setItem('user', JSON.stringify(response.data));
+            setUser(response.data);
             setLogging(false)
             navigate("/");
         } catch (error) {
@@ -73,7 +75,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logging,
         signup,
-        getUser,
+        // getUser,
         logout,
         ticketHasBeenPosted,
         setTicketHasBeenPosted,
