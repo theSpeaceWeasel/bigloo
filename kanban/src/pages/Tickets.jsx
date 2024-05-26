@@ -1,7 +1,7 @@
 import TicketCard from "../components/TicketCard"
 import { useGetTicketsQuery } from '../services/ticket';
 import { useAuth } from "../context/AuthContext";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion"
 import Lottie from "react-lottie";
 import loadinganimation from "./laptop-animation.json";
@@ -11,7 +11,8 @@ import { useEffect } from 'react';
 
 const Tickets = () => {
 
-  const { user, ticketHasBeenPosted, setTicketHasBeenPosted, cardTaskUpdated } = useAuth()
+  const { user, setUser, ticketHasBeenPosted, setTicketHasBeenPosted, cardTaskUpdated, setCardTaskUpdated } = useAuth()
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const ticketSearch = searchParams.get("search") || "";
   const filter = searchParams.get("sorting") || "";
@@ -47,6 +48,7 @@ const Tickets = () => {
   const {
     data: tickets = [],
     refetch: refetchTickets,
+    error,
     // isLoading,
     isFetching,
 
@@ -54,9 +56,17 @@ const Tickets = () => {
     // refetchOnMountOrArgChange: true,
     // Esnsure data is refetched on mount
   });
-  //with user.id
 
-  console.log(tickets.data)
+  if (error?.status === 401) {
+    localStorage.removeItem('user')
+    setUser({})
+    navigate('/login')
+
+
+    navigate("/login");
+  }
+
+  console.log(error)
   // console.log(Array.isArray(tickets.data));
 
   const filterByPriority = (filterDirection) => {
@@ -69,9 +79,10 @@ const Tickets = () => {
   console.log(uniqueCategories)
 
   useEffect(() => {
-    if (ticketHasBeenPosted, cardTaskUpdated) {
+    if (ticketHasBeenPosted || cardTaskUpdated) {
       refetchTickets();
       setTicketHasBeenPosted(false)
+      setCardTaskUpdated(false)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

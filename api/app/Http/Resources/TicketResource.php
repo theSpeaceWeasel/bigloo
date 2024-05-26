@@ -19,22 +19,30 @@ class TicketResource extends JsonResource
         $ticketId = $this->id;
 
         // Perform the necessary database queries to get the counts
-        $completedTasksCount = DB::table('tickets')
+        // $completedTasksCount = DB::table('tickets')
+        //     ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
+        //     ->join('cards', 'boards.id', '=', 'cards.board_id')
+        //     ->join('tasks', 'cards.id', '=', 'tasks.card_id')
+        //     ->where('tickets.id', $ticketId)
+        //     ->where('tasks.completed', true)
+        //     ->count();
+
+        // $tasksCount = DB::table('tickets')
+        //     ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
+        //     ->join('cards', 'boards.id', '=', 'cards.board_id')
+        //     ->join('tasks', 'cards.id', '=', 'tasks.card_id')
+        //     ->where('tickets.id', $ticketId)
+        //     ->count();
+
+        $tasksCounts = DB::table('tickets')
             ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
             ->join('cards', 'boards.id', '=', 'cards.board_id')
             ->join('tasks', 'cards.id', '=', 'tasks.card_id')
             ->where('tickets.id', $ticketId)
-            ->where('tasks.completed', true)
-            ->count();
+            ->selectRaw('COUNT(tasks.id) as total_tasks, COUNT(CASE WHEN tasks.completed = 1 THEN 1 END) as completed_tasks')
+            ->first();
 
-        $tasksCount = DB::table('tickets')
-            ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
-            ->join('cards', 'boards.id', '=', 'cards.board_id')
-            ->join('tasks', 'cards.id', '=', 'tasks.card_id')
-            ->where('tickets.id', $ticketId)
-            ->count();
-
-        $completionRatio = $tasksCount > 0 ? ($completedTasksCount / $tasksCount) * 100 : 0;
+        $completionRatio = ($tasksCounts->completed_tasks / $tasksCounts->total_tasks) * 100 ;
 
         return [
            'id' => $this->id,

@@ -21,7 +21,7 @@ export const ticketApi = createApi({
   }),
   defaultOptions: {
     queries: {
-      keepUnusedDataFor: 3000,  // Cache data for 5 minutes (300 seconds) by default
+      keepUnusedDataFor: 86400,  // Cache data for 5 minutes (300 seconds) by default
     },
   },
   tagTypes,

@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logging,
         signup,
-        // getUser,
+        setUser,
         logout,
         ticketHasBeenPosted,
         setTicketHasBeenPosted,
