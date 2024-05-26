@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 
 const Tickets = () => {
 
-  const { user, ticketHasBeenPosted, setTicketHasBeenPosted } = useAuth()
+  const { user, ticketHasBeenPosted, setTicketHasBeenPosted, cardTaskUpdated } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams();
   const ticketSearch = searchParams.get("search") || "";
   const filter = searchParams.get("sorting") || "";
@@ -69,13 +69,13 @@ const Tickets = () => {
   console.log(uniqueCategories)
 
   useEffect(() => {
-    if (ticketHasBeenPosted) {
+    if (ticketHasBeenPosted, cardTaskUpdated) {
       refetchTickets();
       setTicketHasBeenPosted(false)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticketHasBeenPosted])
+  }, [ticketHasBeenPosted, cardTaskUpdated])
 
   return (
 

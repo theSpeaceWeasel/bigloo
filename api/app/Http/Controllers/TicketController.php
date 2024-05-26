@@ -87,28 +87,28 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function tasksCompleted($ticketId)
-    {
-        // $ticket = Ticket::with('boards.cards.tasks')->find($ticketId);
-        $completedTasksCount = DB::table('tickets')
-        ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
-        ->join('cards', 'boards.id', '=', 'cards.board_id')
-        ->join('tasks', 'cards.id', '=', 'tasks.card_id')
-        ->where('tickets.id', $ticketId)
-        ->where('tasks.completed', true)
-        ->count();
+    // public function tasksCompleted($ticketId)
+    // {
+    //     // $ticket = Ticket::with('boards.cards.tasks')->find($ticketId);
+    //     $completedTasksCount = DB::table('tickets')
+    //     ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
+    //     ->join('cards', 'boards.id', '=', 'cards.board_id')
+    //     ->join('tasks', 'cards.id', '=', 'tasks.card_id')
+    //     ->where('tickets.id', $ticketId)
+    //     ->where('tasks.completed', true)
+    //     ->count();
 
 
-        $tasksCount = DB::table('tickets')
-        ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
-        ->join('cards', 'boards.id', '=', 'cards.board_id')
-        ->join('tasks', 'cards.id', '=', 'tasks.card_id')
-        ->where('tickets.id', $ticketId)
-        ->count();
+    //     $tasksCount = DB::table('tickets')
+    //     ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
+    //     ->join('cards', 'boards.id', '=', 'cards.board_id')
+    //     ->join('tasks', 'cards.id', '=', 'tasks.card_id')
+    //     ->where('tickets.id', $ticketId)
+    //     ->count();
 
-        $data = ['completed_tasks_count' => $completedTasksCount, 'total_tasks_count' => $tasksCount];
-        return response()->json($data, 201);
-    }
+    //     $data = ['completed_tasks_count' => $completedTasksCount, 'total_tasks_count' => $tasksCount];
+    //     return response()->json($data, 201);
+    // }
 
     public function downloadBoardsTasks($id)
     {

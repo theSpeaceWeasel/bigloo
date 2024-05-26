@@ -33,10 +33,10 @@ export const ticketApi = createApi({
       providesTags: ['tickets'],
     }),
 
-    getTicketTasksCompleted: builder.query({
-      query: (ticketId) => `api/ticket/${ticketId}/tasks-completed`,
-      providesTags: ['tasksDone'],
-    }),
+    // getTicketTasksCompleted: builder.query({
+    //   query: (ticketId) => `api/ticket/${ticketId}/tasks-completed`,
+    //   providesTags: ['tasksDone'],
+    // }),
 
     deleteTicket: builder.mutation({
       query: (id) => ({
