@@ -18,7 +18,17 @@ class BoardController extends Controller
     public function index(Request $request, $ticketId)
     {
         //
-        $boards = Board::with(['cards.labels', 'cards.tasks'])->where('ticket_id', $ticketId)->get();
+        $boards = Board::with([
+            'cards' => function ($query) {
+                $query->select('id', 'board_id', 'title', 'description', 'date'); // Select specific columns for cards
+            },
+            'cards.labels' => function ($query) {
+                $query->select('id', 'card_id', 'color', 'text'); // Select specific columns for cards
+            },
+             'cards.tasks' => function ($query) {
+                 $query->select('id', 'card_id', 'text', 'completed'); // Select specific columns for cards
+             }
+             ])->select('id', 'title', 'ticket_id')->where('ticket_id', $ticketId)->get();
         return BoardResource::collection($boards);
     }
 

@@ -37,7 +37,12 @@ class TicketController extends Controller
             return TicketResource::collection(Ticket::orderBy('priority', $sortDirection)->where('user_id', $userId)->get());
         }
 
-        return TicketResource::collection(Ticket::all()->where('user_id', $userId));
+        //notes:
+        // $posts = Post::with(['user' => function($query) {
+        //     $query->select('id', 'name');
+        // }])->select('id', 'title', 'user_id')->get();
+
+        return TicketResource::collection(Ticket::select('id', 'title', 'description', 'category', 'priority', 'logo', 'user_id')->where('user_id', $userId)->get());
     }
 
 
@@ -78,10 +83,10 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
-    {
-        return new TicketResource($ticket);
-    }
+    // public function show(Ticket $ticket)
+    // {
+    //     return new TicketResource($ticket);
+    // }
 
 
     /**

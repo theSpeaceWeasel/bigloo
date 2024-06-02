@@ -6,12 +6,6 @@ import { useAuth } from '../context/AuthContext'
 
 const GuestLayout = () => {
     const { user } = useAuth()
-    // useEffect(() => {
-    //     if (Object.keys(user).length === 0) getUser()
-
-    // }, [])
-
-    // console.log(user);
     return (!Object.keys(user).length && !user.name ? < Outlet /> : <Navigate to="/" replace />)
 }
 
