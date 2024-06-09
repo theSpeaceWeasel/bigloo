@@ -54,10 +54,11 @@ export const AuthProvider = ({ children }) => {
         await csrf();
         try {
             const response = await axios.post('/register', data);
-            localStorage.setItem('user', JSON.stringify(response.data));
-            setUser(response.data);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            setUser(response.data.user);
             setLogging(false)
             navigate("/");
+            console.log(response.data);
         } catch (error) {
             console.log(error);
         }

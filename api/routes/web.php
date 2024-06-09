@@ -6,6 +6,8 @@ use App\Http\Controllers\TicketController;
 // use Illuminate\Http\Request;
 use App\Mail\MyTestEmail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,7 @@ require __DIR__.'/auth.php';
 //TEST STUFF
 
 Route::get('/testuser', [Test::class, 'create']);
+
 //testmail
 Route::get('/mail', function () {
     $name = "Funny Coder";
@@ -36,8 +39,18 @@ Route::get('/mail', function () {
     Mail::to('thespeaceweasel@gmail.com')->send(new MyTestEmail($name));
 });
 
+Route::get('/users', function () {
+    return User::all();
+});
+
 // Route::middleware(['auth'])->group(function () {
 //     Route::post('/tickets', [TicketController::class,'store'])->middleware('web');
 // });
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::get('/tickets/download-boards-tasks', [TicketController::class, 'downloadBoardsTasks']);

@@ -9,6 +9,7 @@ use App\Http\Requests\StoreBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
 use App\Http\Resources\BoardResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BoardController extends Controller
 {
@@ -17,19 +18,25 @@ class BoardController extends Controller
      */
     public function index(Request $request, $ticketId)
     {
-        //
-        $boards = Board::with([
-            'cards' => function ($query) {
-                $query->select('id', 'board_id', 'title', 'description', 'date'); // Select specific columns for cards
-            },
-            'cards.labels' => function ($query) {
-                $query->select('id', 'card_id', 'color', 'text'); // Select specific columns for cards
-            },
-             'cards.tasks' => function ($query) {
-                 $query->select('id', 'card_id', 'text', 'completed'); // Select specific columns for cards
-             }
-             ])->select('id', 'title', 'ticket_id')->where('ticket_id', $ticketId)->get();
-        return BoardResource::collection($boards);
+        $ticket = Ticket::find($ticketId);
+        $user = $ticket->user;
+
+        if($user->id == Auth::id()) {
+            $boards = Board::with([
+                'cards' => function ($query) {
+                    $query->select('id', 'board_id', 'title', 'description', 'date'); // Select specific columns for cards
+                },
+                'cards.labels' => function ($query) {
+                    $query->select('id', 'card_id', 'color', 'text'); // Select specific columns for cards
+                },
+                 'cards.tasks' => function ($query) {
+                     $query->select('id', 'card_id', 'text', 'completed'); // Select specific columns for cards
+                 }
+                 ])->select('id', 'title', 'ticket_id')->where('ticket_id', $ticketId)->get();
+            return BoardResource::collection($boards);
+        }
+        return response()->json(['message' => 'You are not authorized to view this resource.'], 403);
+
     }
 
     /**
@@ -43,11 +50,11 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBoardRequest $request)
+    public function store(StoreBoardRequest $request, Ticket $ticket)
     {
         $validated = $request->validated();
-        $ticketId = $request->ticket_id;
-        $ticket = Ticket::find($ticketId);
+        // $ticketId = $request->ticket_id;
+        // $ticket = Ticket::find($ticketId);
         if (!$ticket) {
             return response()->json([
                 "message" => "Ticket not found",
@@ -92,9 +99,13 @@ class BoardController extends Controller
         $board = Board::findOrFail($id);
 
         // return $board;
+        if($board->ticket->user->id == Auth::id()) {
+            $board->delete();
 
-        $board->delete();
+            return response()->json(['message' => 'Board deleted successfully'], 200);
+        } else {
+            return response()->json(['message' => "This action is unauthorized."]);
+        }
 
-        return response()->json(['message' => 'Board deleted successfully'], 200);
     }
 }

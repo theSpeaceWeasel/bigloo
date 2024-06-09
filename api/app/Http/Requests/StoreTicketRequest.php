@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Rules\Base64Image;
+use Illuminate\Support\Facades\Auth;
 
 class StoreTicketRequest extends FormRequest
 {
@@ -13,7 +14,10 @@ class StoreTicketRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        if(Auth::user()->email_verified) {
+            return true;
+        }
+        return false;
     }
 
     /**

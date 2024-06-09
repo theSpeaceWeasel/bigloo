@@ -35,7 +35,7 @@ export const boardApi = createApi({
 
         createBoard: builder.mutation({
             query: ({ board, token }) => ({
-                url: `/api/boards`,
+                url: `/api/boards/${board.ticket_id}`,
                 // includeCredentials: true,
                 credentials: "include",
                 method: 'POST',

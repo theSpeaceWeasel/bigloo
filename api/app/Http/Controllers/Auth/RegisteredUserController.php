@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
 
 class RegisteredUserController extends Controller
 {
@@ -30,12 +32,29 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'email_verified' => 0
         ]);
 
-        event(new Registered($user));
+        // event(new Registered($user));
+        $token = $user->createToken('authToken')->plainTextToken;
+        $user->email_verification_token = $token;
+        $user->save();
+
+        Mail::to($user->email)->send(new VerifyEmail($token));
+
 
         Auth::login($user);
 
-        return Auth::user();
+
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User Registered Successfully Verify Your Email Address',
+            'user' => $user,
+            'authorisation' => [
+                'token' => $token,
+            ]
+        ]);
     }
 }

@@ -5,7 +5,9 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion"
 import Lottie from "react-lottie";
 import loadinganimation from "./laptop-animation.json";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+
 
 
 
@@ -16,9 +18,15 @@ const Tickets = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const ticketSearch = searchParams.get("search") || "";
   const filter = searchParams.get("sorting") || "";
+  const [inputValue, setInputValue] = useState("");
+
+  // const debouncedHandleIputChange = useDebouncedCallback(handleInputChange, 500)
+
   const handleInputChange = (e) => {
-    // setSearchParams({ search: e.target.value });
-    const value = e.target.value;
+    setInputValue(e.target.value);
+  };
+
+  const debouncedHandleInputChange = useDebouncedCallback((value) => {
     if (value.trim() === "") {
       const params = new URLSearchParams(searchParams);
       params.delete("search");
@@ -26,7 +34,24 @@ const Tickets = () => {
     } else {
       setSearchParams({ search: value }, { replace: true });
     }
-  };
+  }, 500);
+
+  // Use an effect to call the debounced function when inputValue changes
+  useEffect(() => {
+    debouncedHandleInputChange(inputValue);
+  }, [inputValue, debouncedHandleInputChange]);
+
+  // const handleInputChange = (e) => {
+  //   // setSearchParams({ search: e.target.value });
+  //   const value = e.target.value;
+  //   if (value.trim() === "") {
+  //     const params = new URLSearchParams(searchParams);
+  //     params.delete("search");
+  //     setSearchParams(params);
+  //   } else {
+  //     setSearchParams({ search: value }, { replace: true });
+  //   }
+  // };
 
   const defaultOptions = {
     loop: true,
@@ -61,9 +86,6 @@ const Tickets = () => {
     localStorage.removeItem('user')
     setUser({})
     navigate('/login')
-
-
-    navigate("/login");
   }
 
   console.log(error)
@@ -95,7 +117,7 @@ const Tickets = () => {
       <div className="filtering_container">
         <button onClick={() => filterByPriority('desc')}>⭸</button>
         <button onClick={() => filterByPriority('asc')}>⭷</button>
-        <input value={ticketSearch}
+        <input value={inputValue}
           type="text"
           id="search-bar"
           placeholder="Search for a ticket..."
@@ -110,7 +132,7 @@ const Tickets = () => {
         width={400}
       /> : null}
       <h1>Your Tickets</h1>
-
+      {uniqueCategories.length === 0 && !isFetching ? <h3 style={{ color: "#D3D3D3", padding: "100px" }}>No tickets found 😔, you can create your first ticket by clicking the ➕ button now! </h3> : null}
       <motion.div
         variants={gridVariants}
         initial="hidden"
