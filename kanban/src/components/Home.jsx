@@ -17,9 +17,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const Home = () => {
 
   const [searchParams] = useSearchParams();
-  const verifyEmailToken = decodeURIComponent(searchParams.get("verify-token")) || "";
+  const verifyEmailToken = decodeURIComponent(searchParams.get("verify-token"));
   const { setUser } = useAuth()
-  console.log(verifyEmailToken);
+  console.log(typeof verifyEmailToken);
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -31,21 +31,12 @@ const Home = () => {
 
   useEffect(() => {
     const verifyEmail = async () => {
-      if (verifyEmailToken !== "") {
-        try {
-          const response = await axios.post('/api/verify-email', { token: verifyEmailToken });
-          if (response.data.user) {
-            setUser(response.data.user);
-            toast.success("Account Verified!", {
-              position: "top-right",
-              autoClose: 5000,
-              closeOnClick: true,
-              pauseOnHover: true,
-              theme: "dark",
-            });
-          }
-        } catch (error) {
-          toast.error(error.response?.data?.message || error.message, {
+
+      try {
+        const response = await axios.post('/api/verify-email', { token: verifyEmailToken });
+        if (response.data.user) {
+          setUser(response.data.user);
+          toast.success("Account Verified!", {
             position: "top-right",
             autoClose: 5000,
             closeOnClick: true,
@@ -53,10 +44,22 @@ const Home = () => {
             theme: "dark",
           });
         }
+      } catch (error) {
+        toast.error(error.response?.data?.message || error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          closeOnClick: true,
+          pauseOnHover: true,
+          theme: "dark",
+        });
       }
+
     };
 
-    verifyEmail();
+    if (verifyEmailToken !== "null") {
+      verifyEmail();
+    }
+
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

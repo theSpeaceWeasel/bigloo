@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import Board from "../components/Board/Board";
 import "./Dashboard.css";
 import CustomInput from "../components/CustomInput/CustomInput";
-import { ICard, IBoard } from "../Interfaces/Kanban";
+import { ICard } from "../Interfaces/Kanban";
 import {
   useGetBoardsQuery,
   useCreateBoardMutation,

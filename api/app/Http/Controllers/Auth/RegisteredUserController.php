@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Jobs\RegisteredEmailJob;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 // use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmail;
 
 class RegisteredUserController extends Controller
 {
@@ -40,10 +39,12 @@ class RegisteredUserController extends Controller
         $user->email_verification_token = $token;
         $user->save();
 
-        Mail::to($user->email)->send(new VerifyEmail($token));
+
 
 
         Auth::login($user);
+        RegisteredEmailJob::dispatch($user, $token);
+        info("dispatch here");
 
 
 

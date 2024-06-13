@@ -65,9 +65,11 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logout = () => {
-        axios.post('/logout').then(() => setUser({}))
+        axios.post('/logout').then(() => {
+            navigate("/login")
+        }).then(() => setUser({}))
         localStorage.removeItem('user');
-        navigate("/login")
+
     }
 
     return <AuthContext.Provider value={{
