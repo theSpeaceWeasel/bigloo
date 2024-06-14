@@ -23,6 +23,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return $request->user();
     });
 
+    Route::post('/verify-email', function (Request $request) {
+        $user = $request->user();
+        if($user->email_verification_token === $request->token) {
+            $user->email_verified_at = now();
+            $user->email_verified = 1;
+            $user->email_verification_token = null;
+            $user->save();
+            return response()->json(['user' => $user]);
+        }
+    });
+
     Route::get('/tickets/{ticketId}', [TicketController::class, 'index']);
     Route::get('/ticket/{ticketId}/tasks-completed', [TicketController::class, 'tasksCompleted']);
     Route::post('/tickets', [TicketController::class, 'store']);
@@ -30,7 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/tickets/{id}', [TicketController::class, 'destroy']);
 
     Route::get('/boards/{ticketId}', [BoardController::class, 'index']);
-    Route::post('/boards', [BoardController::class, 'store']);
+    Route::post('/boards/{ticket}', [BoardController::class, 'store']);
     Route::delete('/boards/{id}', [BoardController::class, 'destroy']);
 
     //cards

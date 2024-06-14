@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import Board from "../components/Board/Board";
 import "./Dashboard.css";
 import CustomInput from "../components/CustomInput/CustomInput";
-import { ICard, IBoard } from "../Interfaces/Kanban";
+import { ICard } from "../Interfaces/Kanban";
 import {
   useGetBoardsQuery,
   useCreateBoardMutation,
@@ -13,8 +13,14 @@ import { useCreateCardMutation, useDeleteCardMutation } from "../services/card";
 import Lottie from "react-lottie";
 import loadinganimation from "./loading.json";
 import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+
   const { ticketId } = useParams();
   console.log(ticketId);
   const defaultOptions = {
@@ -41,8 +47,8 @@ function Dashboard() {
     refetch: refetchBoards,
     // isLoading,
     isFetching,
-    // isError,
-    // error,
+    isError,
+    error,
   } = useGetBoardsQuery(ticketId, {
     // refetchOnMountOrArgChange: true,
     skip: !ticketId,
@@ -97,6 +103,12 @@ function Dashboard() {
   };
   const elementVariants = { hidden: { opacity: 0 }, show: { opacity: 1 } };
 
+  if (error?.status === 401) {
+    localStorage.removeItem("user");
+    setUser({});
+    navigate("/login");
+  }
+
   return (
     <motion.div
       variants={gridVariants}
@@ -104,9 +116,18 @@ function Dashboard() {
       animate="show"
       className="app-dsh"
     >
+      <ToastContainer />
       <div className="app-nav">
         <h1>Bigloo Board</h1>
       </div>
+      {isError ??
+        toast.error(error.data.message || "An error occurred", {
+          position: "top-right",
+          autoClose: 5000,
+          closeOnClick: true,
+          pauseOnHover: true,
+          theme: "dark",
+        })}
       {isFetching ? (
         <Lottie
           options={defaultOptions}

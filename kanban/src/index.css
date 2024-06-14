@@ -15,8 +15,16 @@ html {
 body {
   height: 100%;
   margin: 0;
-  background-repeat: no-repeat;
+  /* background-repeat: no-repeat; */
   background-attachment: fixed;
+  background: rgb(10, 1, 1);
+  background: linear-gradient(
+    90deg,
+    rgba(10, 1, 1, 1) 0%,
+    rgba(47, 4, 4, 1) 59%
+  );
+  background-size: cover;
+  background-repeat: round;
 }
 
 label {

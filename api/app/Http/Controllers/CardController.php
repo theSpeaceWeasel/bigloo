@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CardResource;
 use App\Models\Label;
 use App\Models\Task;
+use App\Models\Board;
+use Illuminate\Support\Facades\Auth;
 
 class CardController extends Controller
 {
@@ -18,8 +20,13 @@ class CardController extends Controller
      */
     public function index($boardId)
     {
-        $cards = Card::with(['board', 'labels', 'tasks'])->where('board_id', $boardId)->get();
-        return CardResource::collection($cards);
+        $board = Board::find($boardId);
+        $user = $board->ticket->user;
+        if($user->id == Auth::id()) {
+            $cards = Card::with(['board', 'labels', 'tasks'])->where('board_id', $boardId)->get();
+            return CardResource::collection($cards);
+        }
+        return response()->json(['message' => 'You are not authorized to view this resource.']);
     }
 
     /**

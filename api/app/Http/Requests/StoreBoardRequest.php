@@ -3,6 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Ticket;
+
+use Illuminate\Support\Facades\Log;
 
 class StoreBoardRequest extends FormRequest
 {
@@ -11,7 +15,18 @@ class StoreBoardRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $ticket = $this->route('ticket');
+        // Log the ticket ID for debugging
+        // Log::info("Ticket ID from route:" . $ticket->user->id);
+        // Log::info("Authenticated User ID: " . Auth::id());
+        // Log::info("is equal " . $ticket->user->id == Auth::id());
+
+
+        // Find the ticket by its ID
+        if(Auth::user()->email_verified && $ticket->user->id == Auth::id()) {
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -37,7 +37,12 @@ class TicketController extends Controller
             return TicketResource::collection(Ticket::orderBy('priority', $sortDirection)->where('user_id', $userId)->get());
         }
 
-        return TicketResource::collection(Ticket::all()->where('user_id', $userId));
+        //notes:
+        // $posts = Post::with(['user' => function($query) {
+        //     $query->select('id', 'name');
+        // }])->select('id', 'title', 'user_id')->get();
+
+        return TicketResource::collection(Ticket::select('id', 'title', 'description', 'category', 'priority', 'logo', 'user_id')->where('user_id', $userId)->get());
     }
 
 
@@ -78,37 +83,37 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
-    {
-        return new TicketResource($ticket);
-    }
+    // public function show(Ticket $ticket)
+    // {
+    //     return new TicketResource($ticket);
+    // }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function tasksCompleted($ticketId)
-    {
-        // $ticket = Ticket::with('boards.cards.tasks')->find($ticketId);
-        $completedTasksCount = DB::table('tickets')
-        ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
-        ->join('cards', 'boards.id', '=', 'cards.board_id')
-        ->join('tasks', 'cards.id', '=', 'tasks.card_id')
-        ->where('tickets.id', $ticketId)
-        ->where('tasks.completed', true)
-        ->count();
+    // public function tasksCompleted($ticketId)
+    // {
+    //     // $ticket = Ticket::with('boards.cards.tasks')->find($ticketId);
+    //     $completedTasksCount = DB::table('tickets')
+    //     ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
+    //     ->join('cards', 'boards.id', '=', 'cards.board_id')
+    //     ->join('tasks', 'cards.id', '=', 'tasks.card_id')
+    //     ->where('tickets.id', $ticketId)
+    //     ->where('tasks.completed', true)
+    //     ->count();
 
 
-        $tasksCount = DB::table('tickets')
-        ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
-        ->join('cards', 'boards.id', '=', 'cards.board_id')
-        ->join('tasks', 'cards.id', '=', 'tasks.card_id')
-        ->where('tickets.id', $ticketId)
-        ->count();
+    //     $tasksCount = DB::table('tickets')
+    //     ->join('boards', 'tickets.id', '=', 'boards.ticket_id')
+    //     ->join('cards', 'boards.id', '=', 'cards.board_id')
+    //     ->join('tasks', 'cards.id', '=', 'tasks.card_id')
+    //     ->where('tickets.id', $ticketId)
+    //     ->count();
 
-        $data = ['completed_tasks_count' => $completedTasksCount, 'total_tasks_count' => $tasksCount];
-        return response()->json($data, 201);
-    }
+    //     $data = ['completed_tasks_count' => $completedTasksCount, 'total_tasks_count' => $tasksCount];
+    //     return response()->json($data, 201);
+    // }
 
     public function downloadBoardsTasks($id)
     {

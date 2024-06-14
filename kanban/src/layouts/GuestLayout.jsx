@@ -2,16 +2,10 @@
 
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 
 const GuestLayout = () => {
-    const { user, getUser } = useAuth()
-    useEffect(() => {
-        if (Object.keys(user).length === 0) getUser()
-
-    }, [])
-
-    console.log(user);
+    const { user } = useAuth()
     return (!Object.keys(user).length && !user.name ? < Outlet /> : <Navigate to="/" replace />)
 }
 
