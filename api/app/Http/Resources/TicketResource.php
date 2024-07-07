@@ -42,7 +42,17 @@ class TicketResource extends JsonResource
             ->selectRaw('COUNT(tasks.id) as total_tasks, COUNT(CASE WHEN tasks.completed = 1 THEN 1 END) as completed_tasks')
             ->first();
 
-        $completionRatio = ($tasksCounts->completed_tasks / $tasksCounts->total_tasks) * 100 ;
+        $completedTasks = $tasksCounts->completed_tasks ?? 0;
+        $totalTasks = $tasksCounts->total_tasks ?? 0;
+        $completionRatio = "";
+
+        if ($totalTasks > 0) {
+            $completionRatio = ($completedTasks / $totalTasks) * 100;
+        } else {
+            $completionRatio = 0;
+        }
+
+        // $completionRatio = ($tasksCounts->completed_tasks / $tasksCounts->total_tasks) * 100 ?? 0 ;
 
         return [
            'id' => $this->id,

@@ -9,11 +9,17 @@ import Box from '@mui/material/Box';
 const SignUp = () => {
 
   const schema = yup.object().shape({
-    name: yup.string().required(),
-    email: yup.string().required(),
-    password: yup.string().min(8).max(32).required(),
-    password_confirmation: yup.string().required()
+    name: yup.string().required('Name is required.'),
+    email: yup.string().required('Email is required.'),
+    password: yup.string().required('Password is required.')
+      .min(8, 'Password must be at least 8 characters long')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .matches(/\d/, 'Password must contain at least one number')
+      .matches(/[@$!%*?&]/, 'Password must contain at least one special character'),
+    password_confirmation: yup.string().required('Password confirmation is required')
       .oneOf([yup.ref("password"), null], "Passwords must match")
+
   });
 
 
@@ -46,7 +52,7 @@ const SignUp = () => {
           <label htmlFor="email" className="label">
             Email
           </label>
-          <p style={{ color: 'red' }}>{errors.category?.email}</p>
+          {errors.email && <p style={{ color: 'red', margin: '1px' }}>{errors.password.email}</p>}
         </section>
         {/* name */}
         <section className="group">
@@ -60,7 +66,7 @@ const SignUp = () => {
           <label htmlFor="name" className="label">
             Name
           </label>
-          <p style={{ color: 'red' }}>{errors.category?.name}</p>
+          {errors.name && <p style={{ color: 'red' }}>{errors.name.message}</p>}
         </section>
 
 
@@ -76,7 +82,7 @@ const SignUp = () => {
           <label htmlFor="password" className="label">
             Password
           </label>
-          <p style={{ color: 'red' }}>{errors.category?.password}</p>
+          {errors.password && <p style={{ color: 'red' }}>{errors.password.message}</p>}
         </section>
 
         {/* password conirmation */}
@@ -92,7 +98,8 @@ const SignUp = () => {
           <label htmlFor="password" className="label">
             Password Confirmation
           </label>
-          <p style={{ color: 'red' }}>{errors.category?.password_confirmation}</p>
+          {errors.password_confirmation && <p style={{ color: 'red' }}>{errors.password_confirmation.message}</p>}
+
         </section>
 
         <button type="submit" className="btn">
