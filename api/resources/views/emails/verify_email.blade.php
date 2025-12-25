@@ -55,7 +55,15 @@
     <div class="container">
         <h1>Verify Email Address</h1>
         <p>Please click the button below to verify your email address:</p>
-        <p><a href="{{ url(env('FRONTEND_URL') . '/?verify-token=' . $token) }}" style="color: #ffffff; background-color: #007bff; padding: 10px 20px; border-radius: 5px; display: inline-block; text-decoration: none;">Verify Email Address</a></p>
+        @php
+            $frontendUrl = rtrim(env('FRONTEND_URL', 'http://localhost:3000'), '/');
+            $verificationUrl = $frontendUrl . '/?verify-token=' . urlencode($token);
+        @endphp
+        <p>Or copy and paste this link in your browser:</p>
+        <p style="word-break: break-all; color: #666666; font-family: monospace; background: #f5f5f5; padding: 10px; border-radius: 4px;">
+            {{ $verificationUrl }}
+        </p>
+        <p><a href="{{ $verificationUrl }}" style="color: #ffffff; background-color: #007bff; padding: 10px 20px; border-radius: 5px; display: inline-block; text-decoration: none; margin-top: 10px;">Verify Email Address</a></p>
         <p>If you did not create an account, no further action is required.</p>
         <p>Thanks,<br>{{ config('app.name') }}</p>
     </div>

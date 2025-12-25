@@ -23,18 +23,29 @@ use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
-    public function index(Request $request, $userId)
+    public function index(Request $request, $username)
     {
+        // Find the user by username
+        $user = \App\Models\User::where('name', $username)->first();
+        
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Ensure the authenticated user can only access their own tickets
+        if (Auth::id() != $user->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
 
         if ($request->input('search')) {
 
             $search = $request->input('search');
-            return TicketResource::collection(Ticket::where('title', 'like', '%' . $request->search . '%')->where('user_id', $userId)->get());
+            return TicketResource::collection(Ticket::where('title', 'like', '%' . $request->search . '%')->where('user_id', $user->id)->get());
         }
 
         if ($request->input('sorting')) {
             $sortDirection = $request->input('sorting');
-            return TicketResource::collection(Ticket::orderBy('priority', $sortDirection)->where('user_id', $userId)->get());
+            return TicketResource::collection(Ticket::orderBy('priority', $sortDirection)->where('user_id', $user->id)->get());
         }
 
         //notes:
@@ -42,7 +53,7 @@ class TicketController extends Controller
         //     $query->select('id', 'name');
         // }])->select('id', 'title', 'user_id')->get();
 
-        return TicketResource::collection(Ticket::select('id', 'title', 'description', 'category', 'priority', 'logo', 'user_id')->where('user_id', $userId)->get());
+        return TicketResource::collection(Ticket::select('id', 'title', 'description', 'category', 'priority', 'logo', 'user_id')->where('user_id', $user->id)->get());
     }
 
 

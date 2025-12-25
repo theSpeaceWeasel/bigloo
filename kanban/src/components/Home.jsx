@@ -68,12 +68,13 @@ const Home = () => {
 
   return (
     <div>
-      <Lottie
-        options={defaultOptions}
-        style={{ marginLeft: "10rem" }}
-        height={400}
-        width={400}
-      />
+      <div style={{ marginLeft: "10rem" }}>
+        <Lottie
+          options={defaultOptions}
+          height={400}
+          width={400}
+        />
+      </div>
       <ToastContainer />
 
     </div>

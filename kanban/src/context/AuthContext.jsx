@@ -15,8 +15,6 @@ export const AuthProvider = ({ children }) => {
         return storedUser ? JSON.parse(storedUser) : {};
     });
 
-
-
     const [ticketHasBeenPosted, setTicketHasBeenPosted] = useState(false)
     const [cardTaskUpdated, setCardTaskUpdated] = useState(false)
 

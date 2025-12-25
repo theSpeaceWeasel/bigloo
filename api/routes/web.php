@@ -29,28 +29,28 @@ require __DIR__.'/auth.php';
 
 //TEST STUFF
 
-Route::get('/testuser', [Test::class, 'create']);
+// Route::get('/testuser', [Test::class, 'create']);
 
-//testmail
-Route::get('/mail', function () {
-    $name = "Funny Coder";
+// //testmail
+// Route::get('/mail', function () {
+//     $name = "Funny Coder";
 
-    // The email sending is done using the to method on the Mail facade
-    Mail::to('thespeaceweasel@gmail.com')->send(new MyTestEmail($name));
-});
+//     // The email sending is done using the to method on the Mail facade
+//     Mail::to('thespeaceweasel@gmail.com')->send(new MyTestEmail($name));
+// });
 
-Route::get('/users', function () {
-    return User::all();
-});
+// Route::get('/users', function () {
+//     return User::all();
+// });
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::post('/tickets', [TicketController::class,'store'])->middleware('web');
 // });
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
+// Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+//     $request->fulfill();
 
-    return redirect('/home');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+//     return redirect('/home');
+// })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::get('/tickets/download-boards-tasks', [TicketController::class, 'downloadBoardsTasks']);

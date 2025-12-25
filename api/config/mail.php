@@ -36,15 +36,13 @@ return [
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
             'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
-            'local_domain' => env('MAIL_EHLO_DOMAIN'),
-            'auth_mode'  => null,
+            'timeout' => 30,
+            'auth_mode' => null,
             'verify_peer' => false,
         ],
 
@@ -64,12 +62,10 @@ return [
 
         'mailgun' => [
             'transport' => 'mailgun',
-            // 'domain' => env('MAILGUN_DOMAIN'),
-            // 'secret' => env('MAILGUN_SECRET'),
-            // 'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
-            // 'client' => [
-            //     'timeout' => 5,
-            // ],
+            'domain' => env('MAILGUN_DOMAIN'),
+            'secret' => env('MAILGUN_SECRET'),
+            'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+            'scheme' => 'https',
         ],
 
         'sendmail' => [
@@ -115,8 +111,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'admin@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Admin'),
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', env('APP_NAME')),
     ],
 
     /*

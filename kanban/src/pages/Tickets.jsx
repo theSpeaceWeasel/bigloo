@@ -77,16 +77,18 @@ const Tickets = () => {
     // isLoading,
     isFetching,
 
-  } = useGetTicketsQuery({ userId: user.id, search: ticketSearch ?? null, sorting: filter ?? null }, {
+  } = useGetTicketsQuery({ username: user.name, search: ticketSearch ?? null, sorting: filter ?? null }, {
     // refetchOnMountOrArgChange: true,
     // Esnsure data is refetched on mount
   });
 
-  if (error?.status === 401) {
-    localStorage.removeItem('user')
-    setUser({})
-    navigate('/login')
-  }
+  useEffect(() => {
+    if (error?.status === 401) {
+      localStorage.removeItem('user')
+      setUser({})
+      navigate('/login')
+    }
+  }, [error, setUser, navigate])
 
   console.log(error)
   // console.log(Array.isArray(tickets.data));

@@ -29,7 +29,7 @@ export const ticketApi = createApi({
   endpoints: (builder) => ({
 
     getTickets: builder.query({
-      query: ({ userId, search, sorting }) => `api/tickets/${userId}?search=${encodeURIComponent(search)}&sorting=${sorting}`,
+      query: ({ username, search, sorting }) => `api/tickets/${username}?search=${encodeURIComponent(search)}&sorting=${sorting}`,
       providesTags: ['tickets'],
     }),
 
