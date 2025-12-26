@@ -53,11 +53,13 @@
   width: 100%;
   text-align: center;
 }
+
 .app-boards-add-board-edit {
   background-color: #fff;
   border-radius: 10px;
   padding: 10px;
 }
+
 /*
  * scroll bar styling
  */
@@ -87,4 +89,8 @@
 
 .board-add-card {
   width: 91%;
+}
+
+.lottie-container {
+  margin-right: 100px;
 }

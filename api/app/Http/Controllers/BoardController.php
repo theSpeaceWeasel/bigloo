@@ -61,9 +61,7 @@ class BoardController extends Controller
             ])->setStatusCode(404);
         }
 
-        $board = Board::create($validated);
-        $board->ticket()->associate($ticket);
-        $board->save();
+        $board = $ticket->boards()->create($validated);
 
     }
 

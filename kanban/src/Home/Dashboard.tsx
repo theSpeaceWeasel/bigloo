@@ -95,7 +95,7 @@ function Dashboard() {
     deleteCard({ boardId, cardId });
   };
 
-  const updateCard = (boardId: number, cardId: number, card: ICard) => {};
+  const updateCard = (boardId: number, cardId: number, card: ICard) => { };
 
   const gridVariants = {
     hidden: { opacity: 0 },
@@ -129,12 +129,13 @@ function Dashboard() {
           theme: "dark",
         })}
       {isFetching ? (
-        <Lottie
-          options={defaultOptions}
-          style={{ marginRight: "100px" }}
-          height={60}
-          width={60}
-        />
+        <div className="lottie-container">
+          <Lottie
+            options={defaultOptions}
+            height={60}
+            width={60}
+          />
+        </div>
       ) : (
         <div className="app-boards-container">
           <motion.div variants={elementVariants} className="app-boards">
