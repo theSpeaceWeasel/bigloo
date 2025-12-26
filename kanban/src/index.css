@@ -5,6 +5,15 @@
   padding: 0;
 }
 
+:root {
+  --navbar-width: 120px;
+  --content-spacing: 3rem;
+  --glass-bg: rgba(221, 221, 221, 0.45);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+  --glass-blur: blur(10px);
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 html {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   /* width: fit-content; */
@@ -18,11 +27,9 @@ body {
   /* background-repeat: no-repeat; */
   background-attachment: fixed;
   background: rgb(10, 1, 1);
-  background: linear-gradient(
-    90deg,
-    rgba(10, 1, 1, 1) 0%,
-    rgba(47, 4, 4, 1) 59%
-  );
+  background: linear-gradient(90deg,
+      rgba(10, 1, 1, 1) 0%,
+      rgba(47, 4, 4, 1) 59%);
   background-size: cover;
   background-repeat: round;
 }
@@ -72,7 +79,8 @@ a {
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  padding-left: 120px; /* Account for navbar width */
+  padding-left: 120px;
+  /* Account for navbar width */
   box-sizing: border-box;
 }
 
@@ -94,11 +102,13 @@ a {
   box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.75);
   box-sizing: border-box;
 }
+
 .wrapper h2 {
   margin: 35px 0;
   font-weight: bold;
   font-size: 20px;
 }
+
 .wrapper .footer {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -107,6 +117,7 @@ a {
   background-color: #393e46;
   clip-path: polygon(63% 68%, 100% 25%, 100% 100%, 0 100%, 0 0);
 }
+
 .group {
   display: flex;
   flex-direction: column;
@@ -114,6 +125,7 @@ a {
   margin-top: 35px;
   padding: 0 35px;
 }
+
 .group .label {
   position: absolute;
   /* margin: 0.175rem; */
@@ -124,18 +136,21 @@ a {
   transition: all 0.5s ease;
   pointer-events: none;
 }
+
 .group .input {
   width: 350px;
   background-color: transparent;
   border: none;
   border-bottom: solid 1px white;
   outline: none;
-  color: #f5f5dc; /* Creamy white color */
+  color: #f5f5dc;
+  /* Creamy white color */
   font-size: 16px;
   padding: 5px 0;
 }
-.group .input:focus ~ label,
-.group .input:valid ~ label {
+
+.group .input:focus~label,
+.group .input:valid~label {
   margin-top: -25px;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
@@ -143,6 +158,7 @@ a {
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
+
 .btn {
   color: #eee;
   background-color: transparent;
@@ -155,6 +171,7 @@ a {
   cursor: pointer;
   transition: all 0.1s linear;
 }
+
 .btn:hover {
   color: #bbe1fa;
   scale: 1.1;
@@ -163,7 +180,7 @@ a {
 /*navbar*/
 nav {
   height: 100vh;
-  width: 120px;
+  width: var(--navbar-width);
   position: fixed;
   left: 0;
   top: 0;
@@ -180,7 +197,7 @@ nav {
 .dashboard {
   padding: 30px;
   width: 100%;
-  padding-left: 115px;
+  padding-left: calc(var(--navbar-width) + var(--content-spacing));
 }
 
 .dashboard .ticket-container {
@@ -205,8 +222,11 @@ nav {
   width: 100%;
 }
 
-.ticket-card #link > * {
-  background-color: rgb(221, 221, 221);
+.ticket-card #link>* {
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--card-shadow);
   margin: 2px;
   padding: 15px;
   display: flex;
@@ -235,6 +255,8 @@ nav {
 
 .ticket-card .avatar-container img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /*ticket card STATUS*/
@@ -277,14 +299,25 @@ nav {
 }
 
 /*ticket card DELETE*/
+.tickets-action-btn {
+  display: flex;
+  align-items: stretch;
+}
+
 .ticket-card .delete-block {
-  background-color: rgb(211, 211, 211);
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--card-shadow);
   display: flex;
   width: 50px;
   margin: 2px;
   justify-content: center;
   align-items: center;
-  height: 97%;
+  /* height: 97%; removed fixed height */
+  height: auto;
+  flex: 1;
+  /* Stretch to fill container */
 }
 
 .delete-icon {
@@ -392,7 +425,9 @@ nav {
 h1,
 h3 {
   margin: 0.875rem 0;
-  color: #982644bf;
+  color: #f5f5dc;
+  /* Bold Cream White */
+  font-weight: bold;
 }
 
 input[type="submit"] {
@@ -403,6 +438,8 @@ input[type="submit"] {
 @media screen and (max-width: 768px) {
   .dashboard {
     padding: 15px;
+    padding-left: calc(var(--navbar-width) + 1rem);
+    /* Reduced padding on tablet */
   }
 
   .filtering_container {
@@ -419,6 +456,26 @@ input[type="submit"] {
     margin: 0.5rem 0;
   }
 
+  /* Responsive Ticket Card for Tablet */
+  .ticket-card {
+    flex-wrap: wrap;
+    /* Allow wrapping of action buttons if needed, though mostly for link content */
+  }
+
+  .ticket-card #link {
+    flex-wrap: wrap;
+  }
+
+  .ticket-card #link>* {
+    flex: 1 1 45%;
+    /* Items take up roughly half width */
+  }
+
+  .ticket-card .progress-display {
+    min-width: 100%;
+    /* Progress bar takes full row if needed */
+  }
+
   .ticket-container {
     flex-direction: column;
   }
@@ -428,11 +485,24 @@ input[type="submit"] {
 .deleteCardBtn:active {
   transform: scale(0.95);
 }
+
 /* For screens smaller than 480px (phones) */
 @media screen and (max-width: 480px) {
   .dashboard {
+    padding: 10px;
+    padding-left: 10px;
+    /* Reset for mobile if navbar collapses or changes */
+    padding-bottom: 80px;
+    /* Extra space for bottom nav if exists, or just breathing room */
     margin-left: 0;
   }
+
+  /* Assuming Navbar becomes bottom bar or similar on mobile, or stays left but we need to handle space better */
+  /* If Nav stays left on mobile 120px is huge. Usually it would hide. 
+       Based on existing code '.dashboard { margin-left: 0; }' in existing media query, 
+       it seems mobile layout might expect no sidebar space or sidebar hidden? 
+       For now, I'll respect the user's "responsive" request by stacking the card.
+    */
 
   .ticket {
     padding: 15px;
@@ -447,7 +517,40 @@ input[type="submit"] {
   .group .input {
     width: 100%;
   }
+
+  /* Responsive Ticket Card for Mobile */
+  .ticket-card {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ticket-card #link {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ticket-card #link>* {
+    width: 100%;
+    /* Full width for all items */
+    margin: 5px 0;
+    box-sizing: border-box;
+    /* Ensure padding doesn't overflow width */
+  }
+
+  .tickets-action-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .ticket-card .delete-block {
+    width: 100%;
+    /* Full width action buttons */
+    margin: 5px 0;
+    height: 50px;
+  }
 }
+
 /* 
 .tickets-action-btn {
   height: 95%;
