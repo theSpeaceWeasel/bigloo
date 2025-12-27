@@ -46,7 +46,7 @@ function Dashboard() {
     data: boardss = [],
     refetch: refetchBoards,
     // isLoading,
-    isFetching,
+    isLoading,
     isError,
     error,
   } = useGetBoardsQuery(ticketId, {
@@ -128,7 +128,7 @@ function Dashboard() {
           pauseOnHover: true,
           theme: "dark",
         })}
-      {isFetching ? (
+      {isLoading ? (
         <div className="lottie-container">
           <Lottie
             options={defaultOptions}

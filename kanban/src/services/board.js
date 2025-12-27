@@ -49,6 +49,20 @@ export const boardApi = createApi({
                 }
             }),
             invalidatesTags: (result, error, { board }) => [{ type: 'Cards', id: board.ticket_id }],
+            async onQueryStarted({ board }, { dispatch, queryFulfilled }) {
+                const tempId = Date.now();
+                const patchResult = dispatch(
+                    boardApi.util.updateQueryData('getBoards', board.ticket_id, (draft) => {
+                        if (!draft?.data) return;
+                        draft.data.push({ ...board, id: tempId });
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
 
@@ -58,6 +72,23 @@ export const boardApi = createApi({
                 method: 'DELETE',
             }),
             invalidatesTags: (result, error, { ticketId }) => [{ type: 'Cards', id: ticketId }],
+            async onQueryStarted({ boardId, ticketId }, { dispatch, queryFulfilled }) {
+                if (!ticketId) return;
+                const patchResult = dispatch(
+                    boardApi.util.updateQueryData('getBoards', ticketId, (draft) => {
+                        if (!draft?.data) return;
+                        const index = draft.data.findIndex(b => b.id === boardId);
+                        if (index !== -1) {
+                            draft.data.splice(index, 1);
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
     }),

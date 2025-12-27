@@ -16,13 +16,13 @@
   color: black;
   display: inline-block;
   font-size: 15px;
-  margin-left: 100px;
+  margin-left: 160px;
   line-height: 36px;
   padding: 30px;
 }
 
 .app-boards-container {
-  margin-left: 100px;
+  margin-left: 160px;
   flex: 1;
   width: 100%;
   overflow-x: auto;
