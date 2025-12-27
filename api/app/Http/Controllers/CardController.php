@@ -88,15 +88,12 @@ class CardController extends Controller
             'text' => 'required|string',
         ]);
 
-        // Create the new label
-        $label = Label::create([
+        // Create the new label attached to the card
+        $label = $card->labels()->create([
             'color' => $request->input('color'),
             'text' => $request->input('text'),
             // Add other fields as needed
         ]);
-
-        // Attach the new label to the card
-        $card->labels()->save($label);
 
         return response()->json(['message' => 'Label added to card successfully']);
     }
@@ -112,15 +109,12 @@ class CardController extends Controller
             'text' => 'required|string',
         ]);
 
-        // Create the new label
-        $task = Task::create([
+        // Create the new task attached to the card
+        $task = $card->tasks()->create([
             'completed' => $request->input('completed') ? 1 : 0,
             'text' => $request->input('text'),
             // Add other fields as needed
         ]);
-
-        // Attach the new label to the card
-        $card->tasks()->save($task);
 
         return response()->json(['message' => 'Task added to card successfully']);
     }
