@@ -114,6 +114,12 @@ function CardInfo(props: CardInfoProps) {
   };
 
   useEffect(() => {
+    if (card) {
+      setCardValues((prev) => ({ ...prev, ...card }));
+    }
+  }, [card]);
+
+  useEffect(() => {
     if (updateCard) updateCard(boardId, cardValues.id, cardValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardValues]);

@@ -62,6 +62,22 @@ export const cardApi = createApi({
                 },
             }),
             invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
+            async onQueryStarted({ title, cardId, boardId }, { dispatch, queryFulfilled }) {
+                if (!boardId) return;
+                const patchResult = dispatch(
+                    cardApi.util.updateQueryData('getCardsFromBoard', boardId, (draft) => {
+                        const card = draft?.data?.find(c => c.id === cardId)
+                        if (card) {
+                            card.title = title
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
         updateCardDescription: builder.mutation({
@@ -75,6 +91,22 @@ export const cardApi = createApi({
                 },
             }),
             invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
+            async onQueryStarted({ description, cardId, boardId }, { dispatch, queryFulfilled }) {
+                if (!boardId) return;
+                const patchResult = dispatch(
+                    cardApi.util.updateQueryData('getCardsFromBoard', boardId, (draft) => {
+                        const card = draft?.data?.find(c => c.id === cardId)
+                        if (card) {
+                            card.description = description
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
         addLabelToCard: builder.mutation({
@@ -84,6 +116,24 @@ export const cardApi = createApi({
                 body: { ...label },
             }),
             invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
+            async onQueryStarted({ label, cardId, boardId }, { dispatch, queryFulfilled }) {
+                if (!boardId) return;
+                const tempId = Date.now();
+                const patchResult = dispatch(
+                    cardApi.util.updateQueryData('getCardsFromBoard', boardId, (draft) => {
+                        const card = draft?.data?.find(c => c.id === cardId)
+                        if (card) {
+                            if (!card.labels) card.labels = [];
+                            card.labels.push({ ...label, id: tempId });
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
         addTaskToCard: builder.mutation({
@@ -93,6 +143,24 @@ export const cardApi = createApi({
                 body: { ...task },
             }),
             invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
+            async onQueryStarted({ task, cardId, boardId }, { dispatch, queryFulfilled }) {
+                if (!boardId) return;
+                const tempId = Date.now();
+                const patchResult = dispatch(
+                    cardApi.util.updateQueryData('getCardsFromBoard', boardId, (draft) => {
+                        const card = draft?.data?.find(c => c.id === cardId)
+                        if (card) {
+                            if (!card.tasks) card.tasks = [];
+                            card.tasks.push({ ...task, id: tempId });
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
         updateCardTask: builder.mutation({
@@ -102,6 +170,26 @@ export const cardApi = createApi({
                 body: { completed },
             }),
             invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
+            async onQueryStarted({ taskId, completed, boardId }, { dispatch, queryFulfilled }) {
+                if (!boardId) return;
+                const patchResult = dispatch(
+                    cardApi.util.updateQueryData('getCardsFromBoard', boardId, (draft) => {
+                        if (!draft?.data) return;
+                        for (const card of draft.data) {
+                            const task = card.tasks?.find(t => t.id === taskId)
+                            if (task) {
+                                task.completed = completed
+                                break
+                            }
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
         updateDueDateForCard: builder.mutation({
@@ -128,6 +216,26 @@ export const cardApi = createApi({
                 method: 'DELETE',
             }),
             invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
+            async onQueryStarted({ labelId, boardId }, { dispatch, queryFulfilled }) {
+                if (!boardId) return;
+                const patchResult = dispatch(
+                    cardApi.util.updateQueryData('getCardsFromBoard', boardId, (draft) => {
+                        if (!draft?.data) return;
+                        for (const card of draft.data) {
+                            const index = card.labels?.findIndex(l => l.id === labelId)
+                            if (index !== undefined && index !== -1) {
+                                card.labels.splice(index, 1)
+                                break
+                            }
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
         deleteTaskFromCard: builder.mutation({
@@ -136,6 +244,26 @@ export const cardApi = createApi({
                 method: 'DELETE',
             }),
             invalidatesTags: (result, error, { boardId }) => [{ type: 'Cards', id: boardId }],
+            async onQueryStarted({ taskId, boardId }, { dispatch, queryFulfilled }) {
+                if (!boardId) return;
+                const patchResult = dispatch(
+                    cardApi.util.updateQueryData('getCardsFromBoard', boardId, (draft) => {
+                        if (!draft?.data) return;
+                        for (const card of draft.data) {
+                            const index = card.tasks?.findIndex(t => t.id === taskId)
+                            if (index !== undefined && index !== -1) {
+                                card.tasks.splice(index, 1)
+                                break
+                            }
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
         }),
 
     }),

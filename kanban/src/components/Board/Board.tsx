@@ -38,7 +38,7 @@ function Board(props: BoardProps) {
   const {
     data: cards = [],
     refetch: refetchCards,
-    isFetching,
+    isLoading,
   } = useGetCardsFromBoardQuery(board.id);
 
   console.log(cards);
@@ -75,7 +75,7 @@ function Board(props: BoardProps) {
           </div>
         </div>
         <div className="board-cards custom-scroll">
-          {isFetching ? (
+          {isLoading ? (
             <Lottie
               options={defaultOptions}
               style={{ marginRight: "100px" }}
