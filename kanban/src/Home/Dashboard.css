@@ -5,21 +5,7 @@
   flex-direction: column;
 }
 
-.app-nav {
-  padding: 5px 0px;
-  box-shadow: 0 1px 20px rgba(56, 40, 40, 0.05);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  /* position: sticky; */
-  top: 0;
-  background: transparent;
-  box-shadow: none;
-  color: black;
-  display: inline-block;
-  font-size: 15px;
-  margin-left: 160px;
-  line-height: 36px;
-  padding: 30px;
-}
+/* .app-nav removed */
 
 .app-boards-container {
   margin-left: 160px;
@@ -29,7 +15,7 @@
   /* overflow-y: auto; */
   width: auto;
   height: 100%;
-  padding-top: 20px;
+  padding-top: 0px;
 }
 
 .app-boards {
@@ -95,18 +81,19 @@
   margin-right: 100px;
 }
 
-/* Ticket Header Section - Trello/Jira/Todoist Style */
+/* Ticket Header Section - Refined to match boards */
 .ticket-header-section {
-  background: rgba(43, 43, 63, 0.7);
-  backdrop-filter: blur(12px);
+  background: rgba(223, 227, 230, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 32px 40px;
   margin-left: 160px;
   margin-right: 30px;
-  margin-top: 24px;
+  margin-top: 20px;
   margin-bottom: 24px;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .ticket-header-content {
@@ -122,10 +109,10 @@
   height: 120px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.6);
 }
 
 .ticket-header-image {
@@ -136,7 +123,7 @@
 
 .ticket-header-info {
   flex: 1;
-  color: #ffffff;
+  color: #17394d;
 }
 
 .ticket-title-row {
@@ -151,34 +138,33 @@
   font-size: 28px;
   font-weight: 700;
   margin: 0;
-  color: #ffffff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #17394d;
   letter-spacing: -0.5px;
 }
 
 .ticket-badge {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(10px);
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 13px;
-  font-weight: 600;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+  color: #17394d;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .ticket-header-description {
   font-size: 16px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  color: #4a6170;
   margin: 0 0 20px 0;
   max-width: 800px;
 }
 
 .ticket-meta-info {
   display: flex;
-  gap: 32px;
+  gap: 24px;
   flex-wrap: wrap;
   align-items: center;
 }
@@ -187,36 +173,37 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   padding: 8px 16px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   transition: all 0.2s ease;
+  color: #17394d;
 }
 
 .ticket-meta-item:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.5);
   transform: translateY(-1px);
 }
 
 .ticket-meta-icon {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  color: #17394d;
 }
 
 .ticket-meta-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7c93;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
 }
 
 .ticket-meta-value {
   font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 700;
+  color: #17394d;
 }
 
 .ticket-category {
@@ -234,13 +221,12 @@
 
 .priority-star {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 }
 
 .priority-star.active {
-  color: #ffd700;
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  color: #ffb400;
 }
 
 /* Responsive Design */

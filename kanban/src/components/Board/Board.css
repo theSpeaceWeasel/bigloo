@@ -7,15 +7,17 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  
-  
+
+
   color: #17394d;
 }
-.board-inner{
+
+.board-inner {
   background-color: rgb(223 227 230 / 55%);
   padding: 15px;
-  border-radius: 3px;
+  border-radius: 16px;
 }
+
 .board-header {
   display: flex;
   justify-content: space-between;
@@ -24,15 +26,21 @@
 }
 
 .board-header-title {
-  font-weight: bold;
-  font-size: 1rem;
+  font-weight: 800;
+  font-size: 1.32rem;
   display: flex;
-  gap: 5px;
+  gap: 12px;
   align-items: center;
+  color: #17394d;
 }
 
-.board-header-title span {
-  color: rgb(145, 145, 145);
+.board-count {
+  background: rgba(23, 57, 77, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 1.02rem;
+  color: #17394d;
+  font-weight: 800;
 }
 
 .board-header-title-more {
@@ -46,6 +54,7 @@
   width: 150px !important;
   cursor: default;
 }
+
 .board-dropdown p {
   border-bottom: 1px solid #f8f8f8;
   cursor: pointer;
@@ -69,6 +78,7 @@
   width: 100%;
   text-align: center;
 }
+
 .board-add-card-edit {
   background-color: #fff;
   border-radius: 10px;

@@ -49,7 +49,7 @@ function Board(props: BoardProps) {
         <div className="board-header">
           <p className="board-header-title">
             {board?.title}
-            <span>{cards?.length || 0}</span>
+            <span className="board-count">{cards?.data?.length || 0}</span>
           </p>
           <div
             className="board-header-title-more"

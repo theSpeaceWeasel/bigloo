@@ -129,7 +129,7 @@ function Dashboard() {
       className="app-dsh"
     >
       <ToastContainer />
-      
+
       {/* Ticket Header Section */}
       {ticket && !isLoadingTicket && (
         <div className="ticket-header-section">
@@ -178,9 +178,6 @@ function Dashboard() {
         </div>
       )}
 
-      <div className="app-nav">
-        <h1>Bigloo Board</h1>
-      </div>
       {isError ??
         toast.error(error.data.message || "An error occurred", {
           position: "top-right",
