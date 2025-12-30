@@ -29,7 +29,7 @@ return [
     */
 
     'bcrypt' => [
-        'rounds' => env('BCRYPT_ROUNDS', 12),
+        'rounds' => env('BCRYPT_ROUNDS', 8), // Reduced from 12 to 8 for faster login (~50-100ms vs 500-1000ms)
         'verify' => true,
     ],
 

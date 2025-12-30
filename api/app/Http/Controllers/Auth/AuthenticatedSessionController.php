@@ -19,7 +19,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return Auth::user();
+        // Return only essential user data for faster response
+        $user = Auth::user();
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'email_verified' => $user->email_verified ?? 0,
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

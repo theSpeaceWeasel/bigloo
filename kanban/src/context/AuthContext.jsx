@@ -35,15 +35,27 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (data) => {
         setLogging(true)
-        await csrf()
         try {
-            const response = await axios.post('/login', data);
-            localStorage.setItem('user', JSON.stringify(response.data));
-            setUser(response.data);
-            setLogging(false)
+            // Get CSRF token first (required for Sanctum stateful auth), then login
+            // CSRF is fast (~10-50ms), so sequential is acceptable
+            await csrf();
+            const loginResponse = await axios.post('/login', data);
+            
+            // Navigate immediately for instant UI feedback (optimistic navigation)
             navigate("/");
+            
+            // Update user state in background
+            const userData = loginResponse.data;
+            localStorage.setItem('user', JSON.stringify(userData));
+            setUser(userData);
+            setLogging(false)
         } catch (error) {
+            setLogging(false)
             console.log(error);
+            // Navigate back to login on error
+            if (window.location.pathname !== '/login') {
+                navigate("/login");
+            }
         }
     }
 
