@@ -25,35 +25,62 @@ class TicketController extends Controller
 {
     public function index(Request $request, $username)
     {
-        // Find the user by username
-        $user = \App\Models\User::where('name', $username)->first();
+        // Find the user by username - optimized with index
+        $user = \App\Models\User::where('name', $username)->first(['id']);
         
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
 
-        // Ensure the authenticated user can only access their own tickets
+        // Ensure authorized
         if (Auth::id() != $user->id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        if ($request->input('search')) {
+        $search = $request->input('search');
 
-            $search = $request->input('search');
-            return TicketResource::collection(Ticket::where('title', 'like', '%' . $request->search . '%')->where('user_id', $user->id)->get());
+        // Main Query with Left Join for Aggregated Counts
+        $query = Ticket::query()
+            ->join('users', 'tickets.user_id', '=', 'users.id')
+            ->leftJoin(DB::raw('(
+                SELECT 
+                    b.ticket_id, 
+                    COUNT(t.id) as total_tasks_count, 
+                    COUNT(CASE WHEN t.completed = 1 THEN 1 END) as completed_tasks_count
+                FROM boards b
+                LEFT JOIN cards c ON b.id = c.board_id
+                LEFT JOIN tasks t ON c.id = t.card_id
+                GROUP BY b.ticket_id
+            ) as task_stats'), 'tickets.id', '=', 'task_stats.ticket_id')
+            ->select([
+                'tickets.id', 'tickets.ticket_number', 'tickets.title', 'tickets.description', 
+                'tickets.category', 'tickets.priority', 'tickets.logo', 'tickets.user_id',
+                'users.email as user_email',
+                DB::raw('COALESCE(task_stats.total_tasks_count, 0) as total_tasks_count'),
+                DB::raw('COALESCE(task_stats.completed_tasks_count, 0) as completed_tasks_count')
+            ])
+            ->where('tickets.user_id', $user->id);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                // Full-Text search for title (quasi-momentous)
+                if (strlen($search) >= 3) {
+                    $q->whereRaw("MATCH(tickets.title) AGAINST(? IN BOOLEAN MODE)", [$search . '*']);
+                } else {
+                    $q->where('tickets.title', 'like', '%' . $search . '%');
+                }
+
+                $q->orWhere('tickets.ticket_number', 'like', $search . '%')
+                  ->orWhere('users.email', 'like', '%' . $search . '%');
+            });
         }
 
         if ($request->input('sorting')) {
-            $sortDirection = $request->input('sorting');
-            return TicketResource::collection(Ticket::orderBy('priority', $sortDirection)->where('user_id', $user->id)->get());
+            $query->orderBy('tickets.priority', $request->input('sorting'));
         }
 
-        //notes:
-        // $posts = Post::with(['user' => function($query) {
-        //     $query->select('id', 'name');
-        // }])->select('id', 'title', 'user_id')->get();
-
-        return TicketResource::collection(Ticket::select('id', 'title', 'description', 'category', 'priority', 'logo', 'user_id')->where('user_id', $user->id)->get());
+        // Return collection directly - Resource will handle mapping
+        return TicketResource::collection($query->get());
     }
 
 
@@ -65,6 +92,14 @@ class TicketController extends Controller
 
         $validated = $request->validated();
         $validated['user_id'] = Auth::id();
+        
+        // Generate a unique random ticket number (8 digits)
+        do {
+            $ticketNumber = str_pad(rand(10000000, 99999999), 8, '0', STR_PAD_LEFT);
+        } while (Ticket::where('ticket_number', $ticketNumber)->exists());
+        
+        $validated['ticket_number'] = $ticketNumber;
+        
         $gpath = null;
 
         if ($request->hasFile('logo')) {
@@ -94,10 +129,21 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    // public function show(Ticket $ticket)
-    // {
-    //     return new TicketResource($ticket);
-    // }
+    public function show($id)
+    {
+        $ticket = Ticket::with('user:id,name,email')->find($id);
+        
+        if (!$ticket) {
+            return response()->json(['error' => 'Ticket not found'], 404);
+        }
+        
+        // Ensure the authenticated user can only access their own tickets
+        if (Auth::id() != $ticket->user_id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
+        return new TicketResource($ticket);
+    }
 
 
     /**

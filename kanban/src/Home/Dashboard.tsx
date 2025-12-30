@@ -10,12 +10,14 @@ import {
   useDeleteBoardMutation,
 } from "../services/board";
 import { useCreateCardMutation, useDeleteCardMutation } from "../services/card";
+import { useGetTicketByIdQuery } from "../services/ticket";
 import Lottie from "react-lottie";
 import loadinganimation from "./loading.json";
 import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { FiMail, FiHash, FiFileText } from "react-icons/fi";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -53,6 +55,13 @@ function Dashboard() {
     // refetchOnMountOrArgChange: true,
     skip: !ticketId,
     // Ensure data is refetched on mount
+  });
+
+  const {
+    data: ticketData,
+    isLoading: isLoadingTicket,
+  } = useGetTicketByIdQuery(ticketId || '', {
+    skip: !ticketId,
   });
 
   const [createCard] = useCreateCardMutation();
@@ -109,6 +118,9 @@ function Dashboard() {
     navigate("/login");
   }
 
+  // Handle both wrapped and unwrapped response formats
+  const ticket = ticketData?.data || ticketData;
+
   return (
     <motion.div
       variants={gridVariants}
@@ -117,6 +129,55 @@ function Dashboard() {
       className="app-dsh"
     >
       <ToastContainer />
+      
+      {/* Ticket Header Section */}
+      {ticket && !isLoadingTicket && (
+        <div className="ticket-header-section">
+          <div className="ticket-header-content">
+            {ticket.logo && (
+              <div className="ticket-image-container">
+                <img src={ticket.logo} alt={ticket.title} className="ticket-header-image" />
+              </div>
+            )}
+            <div className="ticket-header-info">
+              <div className="ticket-title-row">
+                <h1 className="ticket-header-title">{ticket.title}</h1>
+                <div className="ticket-badge">#{ticket.ticket_number}</div>
+              </div>
+              {ticket.description && (
+                <p className="ticket-header-description">{ticket.description}</p>
+              )}
+              <div className="ticket-meta-info">
+                <div className="ticket-meta-item">
+                  <FiMail className="ticket-meta-icon" />
+                  <span className="ticket-meta-label">Email:</span>
+                  <span className="ticket-meta-value">{ticket.user_email || 'N/A'}</span>
+                </div>
+                <div className="ticket-meta-item">
+                  <FiHash className="ticket-meta-icon" />
+                  <span className="ticket-meta-label">Category:</span>
+                  <span className="ticket-meta-value ticket-category">{ticket.category}</span>
+                </div>
+                <div className="ticket-meta-item">
+                  <FiFileText className="ticket-meta-icon" />
+                  <span className="ticket-meta-label">Priority:</span>
+                  <div className="ticket-priority-stars">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        className={`priority-star ${star <= ticket.priority ? 'active' : ''}`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="app-nav">
         <h1>Bigloo Board</h1>
       </div>

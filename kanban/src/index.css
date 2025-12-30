@@ -197,11 +197,19 @@ nav {
 .dashboard {
   padding: 30px;
   width: 100%;
-  padding-left: calc(var(--navbar-width) + var(--content-spacing));
+  padding-left: var(--navbar-width);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dashboard .ticket-container {
-  height: 130vh;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .ticket {

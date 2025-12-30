@@ -31,7 +31,12 @@ class StoreTicketRequest extends FormRequest
 
             'title' => 'required|string',
             'description' => 'required|string|min:8|max:32',
-            'category' => Rule::in(["Q1","Q2", "Q3", "Q4"]),
+            'category' => Rule::in([
+                'Support / Incident — customer problems and outages.',
+                'Service Request / Account — non-incident requests about accounts or access.',
+                'Sales / Leads — inbound leads and followups tracked as tickets.',
+                'Billing / Payment — invoices, refunds, disputes.'
+            ]),
             'priority' => 'required|integer|digits_between:1,5',
             'logo' => [
             'required',

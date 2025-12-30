@@ -33,6 +33,11 @@ export const ticketApi = createApi({
       providesTags: ['tickets'],
     }),
 
+    getTicketById: builder.query({
+      query: (id) => `api/ticket/${id}`,
+      providesTags: ['tickets'],
+    }),
+
     // getTicketTasksCompleted: builder.query({
     //   query: (ticketId) => `api/ticket/${ticketId}/tasks-completed`,
     //   providesTags: ['tasksDone'],
@@ -51,6 +56,7 @@ export const ticketApi = createApi({
 });
 
 export const { useGetTicketsQuery,
+  useGetTicketByIdQuery,
   useGetTicketTasksCompletedQuery,
   useDeleteTicketMutation,
 } = ticketApi;

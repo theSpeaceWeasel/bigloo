@@ -7,6 +7,8 @@ import Lottie from "react-lottie";
 import loadinganimation from "./laptop-animation.json";
 import { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -115,6 +117,7 @@ const Tickets = () => {
   return (
 
     <div className="dashboard">
+      <ToastContainer />
 
       <div className="filtering_container">
         <button onClick={() => filterByPriority('desc')}>⭸</button>

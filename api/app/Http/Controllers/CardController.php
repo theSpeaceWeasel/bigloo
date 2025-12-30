@@ -20,13 +20,27 @@ class CardController extends Controller
      */
     public function index($boardId)
     {
-        $board = Board::find($boardId);
+        $board = Board::with('ticket.user')->find($boardId);
+        
+        if (!$board) {
+            return response()->json(['message' => 'Board not found.'], 404);
+        }
+        
+        if (!$board->ticket) {
+            return response()->json(['message' => 'Ticket not found for this board.'], 404);
+        }
+        
         $user = $board->ticket->user;
+        
+        if (!$user) {
+            return response()->json(['message' => 'User not found for this ticket.'], 404);
+        }
+        
         if($user->id == Auth::id()) {
             $cards = Card::with(['board', 'labels', 'tasks'])->where('board_id', $boardId)->get();
             return CardResource::collection($cards);
         }
-        return response()->json(['message' => 'You are not authorized to view this resource.']);
+        return response()->json(['message' => 'You are not authorized to view this resource.'], 403);
     }
 
     /**

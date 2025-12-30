@@ -16,6 +16,7 @@ import downloadanimation from "../assets/download-animation.json";
 import deleteanimation from "../assets/delete-animation.json";
 import downloadingAnimation from "../assets/downloading-animation.json";
 import { useState } from "react";
+import { toast } from 'react-toastify';
 // import { useAuth } from "../context/AuthContext";
 
 
@@ -87,6 +88,47 @@ const TicketCard = ({ ticket }) => {
 
   }
 
+  const copyEmailToClipboard = async (e, email) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent navigation when clicking email
+    
+    if (!email || email === 'N/A') {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(email);
+      toast.success(`Email copied: ${email}`, {
+        position: "top-right",
+        autoClose: 2000,
+        theme: "dark",
+      });
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = email;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        toast.success(`Email copied: ${email}`, {
+          position: "top-right",
+          autoClose: 2000,
+          theme: "dark",
+        });
+      } catch (err) {
+        toast.error('Failed to copy email', {
+          position: "top-right",
+          autoClose: 2000,
+          theme: "dark",
+        });
+      }
+      document.body.removeChild(textArea);
+    }
+  }
+
   // useEffect(() => {
   //   if (cardTaskUpdated) {
   //     setCardTaskUpdated(false)
@@ -98,6 +140,54 @@ const TicketCard = ({ ticket }) => {
   return (
     <div className="ticket-card">
       <Link to={`/ticket/${ticket.id}`} id="link">
+        <div style={{ 
+          minWidth: '100px', 
+          maxWidth: '120px',
+          textAlign: 'center',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}>
+          <h4 style={{ 
+            margin: 0, 
+            fontSize: '0.9rem', 
+            color: '#f5f5dc',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}>#{ticket.ticket_number || 'N/A'}</h4>
+        </div>
+        <div 
+          onClick={(e) => copyEmailToClipboard(e, ticket.user_email)}
+          style={{ 
+            minWidth: '150px', 
+            maxWidth: '200px',
+            textAlign: 'center',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            cursor: ticket.user_email && ticket.user_email !== 'N/A' ? 'pointer' : 'default',
+            transition: 'opacity 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            if (ticket.user_email && ticket.user_email !== 'N/A') {
+              e.currentTarget.style.opacity = '0.8';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = '1';
+          }}
+          title={ticket.user_email && ticket.user_email !== 'N/A' ? `Click to copy: ${ticket.user_email}` : ''}
+        >
+          <h5 style={{ 
+            margin: 0, 
+            fontSize: '0.85rem', 
+            color: '#f5f5dc',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}>{ticket.user_email || 'N/A'}</h5>
+        </div>
         <h3>{ticket.title} </h3>
         <h5>{ticket.description}</h5>
         <Avatar ticket={ticket} />

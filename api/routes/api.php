@@ -35,6 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::get('/tickets/{username}', [TicketController::class, 'index']);
+    Route::get('/ticket/{id}', [TicketController::class, 'show']);
     Route::get('/ticket/{ticketId}/tasks-completed', [TicketController::class, 'tasksCompleted']);
     Route::post('/tickets', [TicketController::class, 'store']);
     Route::post('/tickets/download-boards-tasks/{id}', [TicketController::class, 'downloadBoardsTasks']);
